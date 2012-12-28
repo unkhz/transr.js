@@ -1,11 +1,12 @@
 /*
  * Transr.js
- * Originally used in SC5 Science In Short project
+ * Minimalistic CSS3 Transitions and translations helper with feature detection and fallback
  *
- * Depends: Underscore
+ * Juhani Pelli <juhani.pelli@gmail.com>
+ * https://github.com/unkhz/transr.js/
  *
- * TODO:
- * - feature detect transform:translate3d
+ * MIT License
+ *
  */
 
 ;(function(){
@@ -19,6 +20,22 @@
         ){};
         return v > 4 ? v : undef;
     });
+
+    // object helper method, copied from Mirin.js
+    function extend() {
+        var dest = arguments[0],
+            rest = arraySlice.call(arguments,1),
+            i,j;
+        for ( i=0,len=rest.length;i<len;i++ ) {
+            var src = rest[i];
+            if ( src ) {
+                for ( j in src ) {
+                    dest[j] = src[j];
+                }
+            }
+        }
+        return dest;
+    }
 
     /* Transr handles project specific style property testing and stuff */
     var properties = {};
@@ -58,7 +75,8 @@
         duration:"0.5s",
         timingFunction:"ease",
         fallback:null,
-        complete:null
+        complete:null,
+        fail:false
     };
 
     function unbindTransitionEnd(el, listener) {
@@ -82,7 +100,7 @@
     }
 
     function transition(aOptions) {
-        var options = _.extend({},transitionDefaults,aOptions),
+        var options = extend({},transitionDefaults,aOptions),
             transitionShorthandProperty = getStyleProperty("transition"),
             transitionProperty = getStyleProperty("transitionProperty"),
             transitionDuration = getStyleProperty("transitionDuration"),
@@ -164,7 +182,7 @@
             ],
             parentFallback = aOptions.fallback;
 
-        transition(_.extend(aOptions,{
+        transition(extend(aOptions,{
             property:"transform",
             value:"translate3d(" + dimensions.join(", ") + ")",
             fallback:function(){
