@@ -8,10 +8,12 @@ Features
 --------
 
   * Detects vendor specific CSS properties and uses only one
-  * Provides fallback method for failed feature detection cases
-  * Transparent, no additional layer of property names
-  * Resets transition style properties after completion, lingering transition 
+  * Provides fallback method for unsupported style properties
+  * Provides complete callback for operations after completion of transition
+  * Resets transition style properties after completion, because lingering transition 
     settings tend to cause issues in some Android devices
+  * Transparent, no additional layer of property names
+  * Pure JavaScript, no library dependencies
 
 
 Examples
