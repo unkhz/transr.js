@@ -13,13 +13,26 @@
 
     // IE detection, https://gist.github.com/527683
     var ie = (function(){
-        var undef, v = 3, div = document.createElement('div');
-        while (
-            div.innerHTML = '<!--[if gt IE '+(++v)+']><i></i><![endif]-->',
-            div.getElementsByTagName('i')[0]
-        ){};
-        return v > 4 ? v : undef;
-    });
+            var undef, v = 3, div = document.createElement('div');
+            while (
+                div.innerHTML = '<!--[if gt IE '+(++v)+']><i></i><![endif]-->',
+                div.getElementsByTagName('i')[0]
+            ){};
+            return v > 4 ? v : undef;
+        }),
+        
+        // minification optimization
+        arraySlice = Array.prototype.slice,
+        
+        // default properties for transition
+        transitionDefaults = {
+            el:null,
+            duration:"0.5s",
+            timingFunction:"ease",
+            fallback:null,
+            complete:null,
+            fail:false
+        };
 
     // object helper method, copied from Mirin.js
     function extend() {
@@ -37,7 +50,6 @@
         return dest;
     }
 
-    /* Transr handles project specific style property testing and stuff */
     var properties = {};
     function getStyleProperty(property) {
         if ( properties[property] ) return properties[property];
@@ -69,16 +81,6 @@
         return typeof val == "number" ? val.toString() + "px" : val;
     }
 
-    /* Modify element with transition and fallback */
-    var transitionDefaults = {
-        el:null,
-        duration:"0.5s",
-        timingFunction:"ease",
-        fallback:null,
-        complete:null,
-        fail:false
-    };
-
     function unbindTransitionEnd(el, listener) {
         try {
             el.removeEventListener("webkitTransitionEnd", listener);
@@ -98,6 +100,9 @@
 
         }
     }
+
+
+    // set any style property value with transition and fallback
 
     function transition(aOptions) {
         var options = extend({},transitionDefaults,aOptions),
@@ -172,7 +177,9 @@
         }
     }
 
-    /* Move element with transition and fallback */
+
+    // set transform:translate3d value with transition and fallback
+
     function translate(aOptions) {
 
         var dimensions = [
@@ -200,6 +207,9 @@
         }));
     }
 
+
+    // set any style property value with fallback, but without transition
+
     function set(el, property, value, fallbackProperty, fallbackValue) {
         var transitionProperty = getStyleProperty("transition"),
             vendorSpecificProperty = getStyleProperty(property);
@@ -223,14 +233,14 @@
         }
     }
 
-    // public api
+
+    // public api methods
+
     var self = window.Transr = {
         getStyleProperty:getStyleProperty,
         set:set,
         transition:transition,
-        translate:translate,
-        translateY:translate,
-        translateX:translate
+        translate:translate
     };
 
 }());
