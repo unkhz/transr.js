@@ -147,10 +147,10 @@
                     if (options.complete) options.complete(options.el);
                 };
 
-            /*console.log("Transr", "transition", el.id ? el.id : el.nodeName,
+            /* console.log("Transr", "transition", el.id ? el.id : el.nodeName,
                 "|", transitionShorthandProperty, transitionValue,
                 "|", "el.style."+vendorSpecificProperty, "=", options.value
-            );*/
+            ); */
 
 
             options.el.style[transitionShorthandProperty] = transitionValue;
@@ -162,9 +162,14 @@
                 fallbackDurationInMS = 1;
             } else {
                 options.el.style[vendorSpecificProperty] = options.value;
-                // listen to transition on real browsers
-                unbindTransitionEnd(options.el, onTransitionEnd);
-                bindTransitionEnd(options.el, onTransitionEnd);
+                // listen to transitionend event on real browsers, unless the duration is 0 
+                if ( durationInMS === 0 ) {
+                    fallbackDurationInMS = 1;
+                } else {
+                    // FIXME: this does not actually unbind the earlier transitions since the function is always new
+                    unbindTransitionEnd(options.el, onTransitionEnd);
+                    bindTransitionEnd(options.el, onTransitionEnd);
+                }
 
             }
 
