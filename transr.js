@@ -32,7 +32,8 @@
             fallback:null,
             complete:null,
             fail:false
-        };
+        },
+        testEl = document.createElement('div');
 
     // object helper method, copied from Mirin.js
     function extend() {
@@ -50,12 +51,13 @@
         return dest;
     }
 
-    var properties = {};
+    var properties = {},
+        transforms = {};
     function getStyleProperty(property) {
         if ( properties[property] ) return properties[property];
-        
+
         var returnProperty;
-        if ( document.body.style[property] !== undefined ) {
+        if ( testEl.style[property] !== undefined ) {
           returnProperty = property;
         }
         for ( var i=0,prefixes=["webkit","moz","o","ms"],len=prefixes.length; i<len; i++ ) {
@@ -74,6 +76,27 @@
         } else {
             return p;
         }
+    }
+
+    function hasTransform(transformFunction) {
+        var transformProp = getStyleProperty('transform');
+        
+        if ( !transformProp ) return false;
+
+        if ( transforms[transformFunction] !== undefined ) return transforms[transformFunction];
+
+        var el = document.createElement('div');
+        el.style[transformProp] = "";
+        el.style[transformProp] = transformFunction;
+
+        document.body.appendChild(el);
+        var compiledTransform = el.style[transformProp],
+            has = typeof compiledTransform == 'string' && compiledTransform.length > 0;
+        document.body.removeChild(el);
+
+        //console.log(transformProp + ', ' + transformFunction + ', ' + has);
+        
+        return transforms[transformFunction] = has;
     }
 
     function buildDimensionString(val) {
@@ -113,7 +136,7 @@
             vendorSpecificProperty = getStyleProperty(options.property),
             enabled = transitionProperty && transitionDuration && transitionTimingFunction && vendorSpecificProperty ? true : false;
 
-        if ( (ie && ie < 10) || !enabled || options.fail ) {
+        if ( !enabled || options.fail ) {
             // fallback
             if ( options.fallback ) {
                 options.fallback();
@@ -156,7 +179,7 @@
             options.el.style[transitionShorthandProperty] = transitionValue;
 
             //console.log(options.el.style[vendorSpecificProperty], options.value);
-            
+
             // if we're already there, transitionend won't fire, so we need to complete asap
             if ( options.el.style[vendorSpecificProperty] == options.value ) {
                 fallbackDurationInMS = 1;
@@ -192,14 +215,27 @@
                 buildDimensionString(aOptions.y),
                 buildDimensionString(aOptions.z)
             ],
-            parentFallback = aOptions.fallback;
+            parentFallback = aOptions.fallback,
+            transformProp = getStyleProperty('transform'),
+            translateFunc = null;
+
+        if ( hasTransform('translate3d(0,0,0)') ) {
+            translateFunc = "translate3d(" + dimensions.join(", ") + ")";
+        } else if ( hasTransform('translate(0,0)') && dimensions[2] === "0px" ) {
+            // 2d translate can only be used if z was not defined
+            dimensions.pop();
+            translateFunc = "translate(" + dimensions.join(", ") + ")";
+        }
 
         transition(extend(aOptions,{
             property:"transform",
-            value:"translate3d(" + dimensions.join(", ") + ")",
+            value:translateFunc,
             fallback:function(){
                 if ( parentFallback ) {
+                    // falls back if transition failed, even if translate works, e.g IE9
                     parentFallback();
+                } else if ( transformProp && translateFunc ) {
+                    set(aOptions.el, transformProp, translateFunc);
                 } else {
                     if ( (aOptions.x !== undefined || aOptions.y !== undefined) && ( !aOptions.el.style.position || aOptions.el.style.position == 'static' ) ) {
                         aOptions.el.style.position = 'relative';
@@ -245,7 +281,9 @@
         getStyleProperty:getStyleProperty,
         set:set,
         transition:transition,
-        translate:translate
+        translate:translate,
+        hasTransform:hasTransform,
+        transforms:transforms
     };
 
 }());
