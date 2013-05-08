@@ -29,6 +29,7 @@
             el:null,
             duration:"0.5s",
             timingFunction:"ease",
+            use3d:true,
             fallback:null,
             complete:null,
             fail:false
@@ -219,7 +220,7 @@
             transformProp = getStyleProperty('transform'),
             translateFunc = null;
 
-        if ( hasTransform('translate3d(0,0,0)') ) {
+        if ( aOptions.use3d && hasTransform('translate3d(0,0,0)') ) {
             translateFunc = "translate3d(" + dimensions.join(", ") + ")";
         } else if ( hasTransform('translate(0,0)') && dimensions[2] === "0px" ) {
             // 2d translate can only be used if z was not defined
