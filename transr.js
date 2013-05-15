@@ -211,16 +211,17 @@
 
     function translate(aOptions) {
 
-        var dimensions = [
-                buildDimensionString(aOptions.x),
-                buildDimensionString(aOptions.y),
-                buildDimensionString(aOptions.z)
+        var options = extend({},transitionDefaults,aOptions),
+            dimensions = [
+                buildDimensionString(options.x),
+                buildDimensionString(options.y),
+                buildDimensionString(options.z)
             ],
-            parentFallback = aOptions.fallback,
+            parentFallback = options.fallback,
             transformProp = getStyleProperty('transform'),
             translateFunc = null;
 
-        if ( aOptions.use3d && hasTransform('translate3d(0,0,0)') ) {
+        if ( options.use3d && hasTransform('translate3d(0,0,0)') ) {
             translateFunc = "translate3d(" + dimensions.join(", ") + ")";
         } else if ( hasTransform('translate(0,0)') && dimensions[2] === "0px" ) {
             // 2d translate can only be used if z was not defined
