@@ -29,10 +29,12 @@
             el:null,
             duration:"0.5s",
             timingFunction:"ease",
-            use3d:true,
-            fallback:null,
-            complete:null,
-            fail:false
+            fallback:null,          // method to excecute if tests fail
+            complete:null,          // method to execute upon completion of transition
+            fail:false,             // force transition to fail
+            // translate specific settings
+            use3d:true,             // use translate3d if possible
+            immediate:false         // skip transition entirely for faster response
         },
         testEl = document.createElement('div');
 
@@ -229,25 +231,36 @@
             translateFunc = "translate(" + dimensions.join(", ") + ")";
         }
 
-        transition(extend(aOptions,{
-            property:"transform",
-            value:translateFunc,
-            fallback:function(){
-                if ( parentFallback ) {
-                    // falls back if transition failed, even if translate works, e.g IE9
-                    parentFallback();
-                } else if ( transformProp && translateFunc ) {
-                    set(aOptions.el, transformProp, translateFunc);
-                } else {
-                    if ( (aOptions.x !== undefined || aOptions.y !== undefined) && ( !aOptions.el.style.position || aOptions.el.style.position == 'static' ) ) {
-                        aOptions.el.style.position = 'relative';
-                    }
+        if ( options.immediate && transformProp && translateFunc ) {
+            // skip timeouts and whatnot if we are not going to fail
+            set(
+                options.el,
+                transformProp,
+                translateFunc
+            );
+            if ( options.complete ) options.complete(options.el);
+        } else {
+            transition(extend(options,{
+                property:"transform",
+                value:translateFunc,
+                fallback:function(){
+                    if ( parentFallback ) {
+                        // falls back if transition failed, even if translate works, e.g IE9
+                        parentFallback();
+                    } else if ( transformProp && translateFunc ) {
+                        set(options.el, transformProp, translateFunc);
+                    } else {
+                        if ( (options.x !== undefined || options.y !== undefined) && ( !options.el.style.position || options.el.style.position == 'static' ) ) {
+                            options.el.style.position = 'relative';
+                        }
 
-                    if ( aOptions.x !== undefined ) aOptions.el.style.left = dimensions[0];
-                    if ( aOptions.y !== undefined ) aOptions.el.style.top = dimensions[1];
+                        if ( options.x !== undefined ) options.el.style.left = dimensions[0];
+                        if ( options.y !== undefined ) options.el.style.top = dimensions[1];
+                    }
                 }
-            }
-        }));
+            }));
+        }
+
     }
 
 
