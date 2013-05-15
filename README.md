@@ -35,7 +35,7 @@ Basic properties can be transitioned with Transr.transition method.
         }
     });
 
-There's also a convenience method for translate3d transforms, in which only the transitioning dimension needs to be defined.
+There's also a convenience method for translate transforms, in which only the transitioning dimension needs to be defined. Support for 3D and 2D translate transforms is detected automatically.
 
     Transr.translate({
         el:document.body,
@@ -43,8 +43,9 @@ There's also a convenience method for translate3d transforms, in which only the 
         y:'10%',
         duration:'0.2s',
         timingFunction:'ease',
+        use3d:true,
         fallback:function(){
-            console.log("browser does not support transitions, we could do a jQuery animate here");
+            console.log("browser does not support transitions or transform:translate, we could do a jQuery animate here");
 
             // if this function is not defined, the default fallback would be like this
             if ( document.body.style.position == 'static' ) {
@@ -55,6 +56,18 @@ There's also a convenience method for translate3d transforms, in which only the 
         },
         complete:function(){
             console.log("transition was completed, either with fallback or normal method");
+        }
+    });
+
+When translating on touchmove/pointer event or on an animation frame, the speed of the operation is crucial. A few milliseconds can be saved by skipping the transition entirely (in contrast to using 0s duration).
+
+    Transr.translate({
+        el:document.body,
+        x:touch.diffX,
+        use3d:true,
+        immediate:true,
+        complete:function(){
+            console.log("Transform was immediately set and completed without going to event loop");
         }
     });
 
