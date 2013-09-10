@@ -20,10 +20,10 @@
             ){};
             return v > 4 ? v : undef;
         }),
-        
+
         // minification optimization
         arraySlice = Array.prototype.slice,
-        
+
         // default properties for transition
         transitionDefaults = {
             el:null,
@@ -83,7 +83,7 @@
 
     function hasTransform(transformFunction) {
         var transformProp = getStyleProperty('transform');
-        
+
         if ( !transformProp ) return false;
 
         if ( transforms[transformFunction] !== undefined ) return transforms[transformFunction];
@@ -98,7 +98,7 @@
         document.body.removeChild(el);
 
         //console.log(transformProp + ', ' + transformFunction + ', ' + has);
-        
+
         return transforms[transformFunction] = has;
     }
 
@@ -155,8 +155,11 @@
                 fallbackDurationInMS = durationInMS + 1500,
                 transitionEnded = false,
 
-                onTransitionEnd = function(){
-                    //console.log("Transr onTransitionEnd", transitionShorthandProperty, vendorSpecificProperty, transitionValue, el.id, fallbackDurationInMS);
+                onTransitionEnd = function(e){
+                    console.log("Transr onTransitionEnd", e ? e.target : 'no event', transitionShorthandProperty, vendorSpecificProperty, transitionValue, el.id, fallbackDurationInMS);
+
+                    // check that we react on the correct element's transitionend
+                    if ( e.target !== el ) return;
 
                     if ( transitionEnded ) return;
                     transitionEnded = true;
@@ -188,7 +191,7 @@
                 fallbackDurationInMS = 1;
             } else {
                 options.el.style[vendorSpecificProperty] = options.value;
-                // listen to transitionend event on real browsers, unless the duration is 0 
+                // listen to transitionend event on real browsers, unless the duration is 0
                 if ( durationInMS === 0 ) {
                     fallbackDurationInMS = 1;
                 } else {
@@ -203,7 +206,7 @@
             // FIXME: is this ok? setting a custom property on an element breaks its hidden class
             // but then again using data-attribute would be terribly slow
             clearTimeout(options.el.timeoutId);
-            options.el.timeoutId = setTimeout(onTransitionEnd, fallbackDurationInMS);
+            options.el.timeoutId = setTimeout(onTransitionEnd, fallbackDurationInMS, {target:options.el});
 
         }
     }
