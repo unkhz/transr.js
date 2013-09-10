@@ -168,7 +168,7 @@
                 transitionEnded = false,
 
                 onTransitionEnd = function(e){
-                    console.log("Transr onTransitionEnd", e ? e.target : 'no event', transitionShorthandProperty, vendorSpecificProperty, transitionValue, el.id, fallbackDurationInMS);
+                    // console.log("Transr onTransitionEnd", e ? e.target : 'no event', transitionShorthandProperty, vendorSpecificProperty, transitionValue, el.id, fallbackDurationInMS);
 
                     // check that we react on the correct element's transitionend
                     if ( e.target !== el ) return;
