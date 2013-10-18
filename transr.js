@@ -1,3 +1,4 @@
+/*global define*/
 /*
  * Transr.js
  * Minimalistic CSS3 Transitions and translations helper with feature detection and fallback
@@ -10,7 +11,7 @@
  */
 
 ;(function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
+    if ( typeof define === 'function' && define.amd ) {
         //Allow using this built library as an AMD module
         //in another project. That other project will only
         //see this AMD call, not the internal modules in
@@ -45,7 +46,7 @@
     function extend() {
         var dest = arguments[0],
             rest = arraySlice.call(arguments,1),
-            i,j;
+            i,j,len;
         for ( i=0,len=rest.length;i<len;i++ ) {
             var src = rest[i];
             if ( src ) {
@@ -60,7 +61,7 @@
     var properties = {},
         transforms = {};
     function getStyleProperty(property) {
-        if ( properties[property] ) return properties[property];
+        if ( properties[property] ) { return properties[property]; }
 
         var returnProperty;
         if ( testEl.style[property] !== undefined ) {
@@ -87,9 +88,9 @@
     function hasTransform(transformFunction) {
         var transformProp = getStyleProperty('transform');
 
-        if ( !transformProp ) return false;
+        if ( !transformProp ) { return false; }
 
-        if ( transforms[transformFunction] !== undefined ) return transforms[transformFunction];
+        if ( transforms[transformFunction] !== undefined ) { return transforms[transformFunction]; }
 
         var el = document.createElement('div');
         el.style[transformProp] = "";
@@ -97,7 +98,7 @@
 
         document.body.appendChild(el);
         var compiledTransform = el.style[transformProp],
-            has = typeof compiledTransform == 'string' && compiledTransform.length > 0;
+            has = typeof compiledTransform === typeof String && compiledTransform.length > 0;
         document.body.removeChild(el);
 
         //console.log(transformProp + ', ' + transformFunction + ', ' + has);
@@ -106,8 +107,8 @@
     }
 
     function buildDimensionString(val) {
-        if ( val === undefined ) val = "0px";
-        return typeof val == "number" ? val.toString() + "px" : val;
+        if ( val === undefined ) { val = "0px"; }
+        return typeof val ===  typeof Number ? val.toString() + "px" : val;
     }
 
     function unbindTransitionEnd(el, listener) {
@@ -152,7 +153,7 @@
             } else {
                 options.el.style[vendorSpecificProperty] = options.value;
             }
-            if (options.complete) options.complete(options.el);
+            if (options.complete) { options.complete(options.el); }
         } else {
             var el = options.el,
                 vendor = transitionProperty.replace(/Transition.*$/, ''),
@@ -165,9 +166,9 @@
                     // console.log("Transr onTransitionEnd", e ? e.target : 'no event', transitionShorthandProperty, vendorSpecificProperty, transitionValue, el.id, fallbackDurationInMS);
 
                     // check that we react on the correct element's transitionend
-                    if ( e.target !== el ) return;
+                    if ( e.target !== el ) { return; }
 
-                    if ( transitionEnded ) return;
+                    if ( transitionEnded ) { return; }
                     transitionEnded = true;
 
                     unbindTransitionEnd(options.el, onTransitionEnd);
@@ -179,7 +180,7 @@
                     // make sure all possible fallback timeouts get cleared
                     clearTimeout(el.timeoutId);
 
-                    if (options.complete) options.complete(options.el);
+                    if (options.complete) { options.complete(options.el); }
                 };
 
             /* console.log("Transr", "transition", el.id ? el.id : el.nodeName,
@@ -193,7 +194,7 @@
             //console.log(options.el.style[vendorSpecificProperty], options.value);
 
             // if we're already there, transitionend won't fire, so we need to complete asap
-            if ( options.el.style[vendorSpecificProperty] == options.value ) {
+            if ( options.el.style[vendorSpecificProperty] === options.value ) {
                 fallbackDurationInMS = 1;
             } else {
                 options.el.style[vendorSpecificProperty] = options.value;
@@ -247,7 +248,7 @@
                 transformProp,
                 translateFunc
             );
-            if ( options.complete ) options.complete(options.el);
+            if ( options.complete ) { options.complete(options.el); }
         } else {
             transition(extend(options,{
                 property:"transform",
@@ -259,12 +260,14 @@
                     } else if ( transformProp && translateFunc ) {
                         set(options.el, transformProp, translateFunc);
                     } else {
-                        if ( (options.x !== undefined || options.y !== undefined) && ( !options.el.style.position || options.el.style.position == 'static' ) ) {
+                        if ( (options.x !== undefined || options.y !== undefined) &&
+                            ( !options.el.style.position || options.el.style.position === 'static' )
+                        ) {
                             options.el.style.position = 'relative';
                         }
 
-                        if ( options.x !== undefined ) options.el.style.left = dimensions[0];
-                        if ( options.y !== undefined ) options.el.style.top = dimensions[1];
+                        if ( options.x !== undefined ) { options.el.style.left = dimensions[0]; }
+                        if ( options.y !== undefined ) { options.el.style.top = dimensions[1]; }
                     }
                 }
             }));
