@@ -23,16 +23,7 @@
     }
 }(this, function (root) {
 
-    // IE detection, https://gist.github.com/527683
-    var ie = (function(){
-            var undef, v = 3, div = document.createElement('div');
-            while (
-                div.innerHTML = '<!--[if gt IE '+(++v)+']><i></i><![endif]-->',
-                div.getElementsByTagName('i')[0]
-            ){};
-            return v > 4 ? v : undef;
-        }),
-
+    var
         // minification optimization
         arraySlice = Array.prototype.slice,
 
@@ -139,6 +130,9 @@
         }
     }
 
+    function buildSingleTransition(aOptions) {
+
+    }
 
     // set any style property value with transition and fallback
 
