@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="transr.js"></script>
+    <style>
+        body {  -webkit-perspective:200px; perspective:200px; }
+        .item { background:red; width:200px; height:20px; border:1px solid black; text-align:center;}
+    </style>
+</head>
+<body>
+    <script type="text/javascript">
+        var id=0,defaults = {duration:'0.33s'};
+        function value(seed) {
+            return Math.round(Math.random() * seed);
+        }
+        function test(method,opts){
+            var failTimeoutId, el = document.createElement('DIV'),
+                testArgs = arguments,
+                desc = (method === 'set' ?
+                    'set ' + [testArgs[1], testArgs[2], testArgs[3], testArgs[4]].join(' ') :
+                    method + ' ' + JSON.stringify(opts));
+            el.className = "item";
+            el.id = 'i'+id++;
+            el.textContent = desc;
+            document.body.appendChild(el);
+
+            setTimeout(function(){
+                if ( method === 'set' ) {
+                    Transr[method](el, testArgs[1], testArgs[2], testArgs[3], testArgs[4]);
+                    clearTimeout(failTimeoutId);
+                } else {
+                    defaults.el = el;
+                    defaults.complete = function(el, prop){
+                        clearTimeout(failTimeoutId);
+                        if ( el.style.cssText.match(prop) ) {
+                            // success if complete works
+                            console.log('Testing', desc, prop, 'SUCCESS');
+                        } else {
+                            console.error('Testing', desc, prop, 'FAILED, styles were not set');
+                        }
+                    };
+                    Transr[method](opts,defaults);
+                }
+            },0);
+
+            // wait a while and check if style was modified
+            failTimeoutId = setTimeout(function(){
+                console.error('Testing', desc, 'FAILED, complete method did not work');
+            },5000);
+        }
+        test('translate', {y:value(100)});
+        test('translate', {x:value(100)});
+        test('translate', {z:value(100)});
+        test('translate', {x:value(100),y:value(100)});
+        test('translate', {x:value(100),y:value(100),z:value(100)});
+        test('rotate', {y:value(100)});
+        test('rotate', {x:value(100)});
+        test('rotate', {z:value(100)});
+        test('rotate', {x:value(100), y:value(100)});
+        test('rotate', {x:value(100), y:value(100), z:value(100)});
+        test('scale', {y:value(100)/10});
+        test('scale', {x:value(100)/10});
+        test('scale', {z:value(100)/10});
+        test('scale', {x:value(100), y:value(100)});
+        test('scale', {x:value(100), y:value(100), z:value(100)});
+        test('skew', {y:value(100)});
+        test('skew', {x:value(100)});
+        test('skew', {x:value(100), y:value(100)});
+        test('transform', {translateX:value(100)});
+        test('transform', {translateZ:value(100)});
+        test('transform', {translateY:value(100)});
+        test('transform', {translateX:value(100),translateY:value(100)});
+        test('transform', {translateX:value(100),translateY:value(100),translateZ:value(100)});
+        test('transform', {rotateX:value(100)});
+        test('transform', {rotateZ:value(100)});
+        test('transform', {rotateY:value(100)});
+        test('transform', {rotateX:value(100),rotateY:value(100),rotateZ:value(100)});
+        test('transform', {scaleX:value(100)/10});
+        test('transform', {scaleZ:value(100)/10});
+        test('transform', {scaleY:value(100)/10});
+        test('transform', {scaleX:value(100),scaleY:value(100),scaleZ:value(100)});
+        test('transform', {skewX:value(100)});
+        test('transform', {skewY:value(100)});
+        test('transform', {skewX:value(100),skewY:value(100)});
+        test('transform', {value:'translateX('+value(100)+'px)'});
+        test('transform', {value:'translateZ('+value(100)+'px)'});
+        test('transform', {value:'translateY('+value(100)+'px)'});
+        test('transform', {value:'rotateX('+value(100)+'deg'});
+        test('transform', {value:'rotateZ('+value(100)+'deg'});
+        test('transform', {value:'rotateY('+value(100)+'deg'});
+        test('transform', {value:'scaleX('+value(100)/10+')'});
+        test('transform', {value:'scaleZ('+value(100)/10+')'});
+        test('transform', {value:'scaleY('+value(100)/10+')'});
+        test('transform', {value:'skewX('+value(100)+'deg)'});
+        test('transform', {value:'skewY('+value(100)+'deg)'});
+        test('set', 'transform', 'translateX('+value(100)+'px)');
+        test('set', 'transform', 'translateZ('+value(100)+'px)');
+        test('set', 'transform', 'translateY('+value(100)+'px)');
+        test('set', 'transform', 'rotateX('+value(100)+'deg');
+        test('set', 'transform', 'rotateZ('+value(100)+'deg');
+        test('set', 'transform', 'rotateY('+value(100)+'deg');
+        test('set', 'transform', 'scaleX('+value(100)/10+')');
+        test('set', 'transform', 'scaleZ('+value(100)/10+')');
+        test('set', 'transform', 'scaleY('+value(100)/10+')');
+        test('set', 'transform', 'skewX('+value(100)+'deg)');
+        test('set', 'transform', 'skewY('+value(100)+'deg)');
+        test('transform', {rotateY:value(100), translateX:value(100)});
+        test('transform', {translateX:value(100), translateZ:value(100)});
+        test('transform', {translateX:value(100), translateY:value(100)});
+        test('transform', {translateX:value(100), rotateX:value(100)});
+        test('transform', {translateX:value(100), rotateZ:value(100)});
+        test('transform', {translateX:value(100), rotateY:value(100)});
+        test('transform', {translateX:value(100), scaleX:value(100)/10});
+        test('transform', {translateX:value(100), scaleZ:value(100)/10});
+        test('transform', {translateX:value(100), scaleY:value(100)/10});
+        test('transform', {translateX:value(100), skewX:value(100)});
+        test('transform', {translateX:value(100), skewY:value(100)});
+        test('transform', {value:'rotateY('+value(100)+'deg) translateX('+value(100)+'px)'});
+        test('transform', {value:'translateX('+value(100)+'px) translateZ('+value(100)+'px)'});
+        test('transform', {value:'translateX('+value(100)+'px) translateY('+value(100)+'px)'});
+        test('transform', {value:'translateX('+value(100)+'px) rotateX('+value(100)+'deg'});
+        test('transform', {value:'translateX('+value(100)+'px) rotateZ('+value(100)+'deg'});
+        test('transform', {value:'translateX('+value(100)+'px) rotateY('+value(100)+'deg'});
+        test('transform', {value:'translateX('+value(100)+'px) scaleX('+value(100)/10+')'});
+        test('transform', {value:'translateX('+value(100)+'px) scaleZ('+value(100)/10+')'});
+        test('transform', {value:'translateX('+value(100)+'px) scaleY('+value(100)/10+')'});
+        test('transform', {value:'translateX('+value(100)+'px) skewX('+value(100)+'deg)'});
+        test('transform', {value:'translateX('+value(100)+'px) skewY('+value(100)+'deg)'});
+        test('transform', [{rotateY:value(100)}, {translateX:value(100)}]);
+        test('transform', [{translateX:value(100)}, {translateZ:value(100)}]);
+        test('transform', [{translateX:value(100)}, {translateY:value(100)}]);
+        test('transform', [{translateX:value(100)}, {rotateX:value(100)}]);
+        test('transform', [{translateX:value(100)}, {rotateZ:value(100)}]);
+        test('transform', [{translateX:value(100)}, {rotateY:value(100)}]);
+        test('transform', [{translateX:value(100)}, {scaleX:value(100)/10}]);
+        test('transform', [{translateX:value(100)}, {scaleZ:value(100)/10}]);
+        test('transform', [{translateX:value(100)}, {scaleY:value(100)/10}]);
+        test('transform', [{translateX:value(100)}, {skewX:value(100)}]);
+        test('transform', [{translateX:value(100)}, {skewY:value(100)}]);
+        test('transition', {property:'opacity', value:0.1});
+        test('transition', [{property:'opacity', value:0.1}, {property:'color', value:'green'}]);
+
+    </script>
+</body>
+</html>
