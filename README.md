@@ -1,12 +1,13 @@
 transr.js
 =========
 
-Minimalistic CSS3 Transitions and translations helper with feature detection and fallback
+Minimalistic CSS3 Transitions and transforms helper with feature detection and fallback
 
 
 Features
 --------
 
+  * Provides a convenient JavaScript interface for defining CSS transitions for a DOM element
   * Detects vendor specific CSS properties and uses only one
   * Provides fallback method for unsupported style properties
   * Provides complete callback for operations after completion of transition
@@ -14,6 +15,7 @@ Features
     settings tend to cause issues in some Android devices
   * Transparent, no additional layer of property names
   * Pure JavaScript, no library dependencies
+  * Optimized for speed
 
 
 Examples
@@ -84,9 +86,9 @@ The transforms can also be set with a more general transform method. You can use
 
     Transr.transform({el:document.body, translateX:'50px', translateY:40});
     Transr.transform({el:document.body, rotateX:'50deg', rotateY:40});
-    Transr.transform({el:document.body, scaleX:0.5, skaleY:'1.2'});
+    Transr.transform({el:document.body, scaleX:0.5, scaleY:'1.2'});
     Transr.transform({el:document.body, skewX:10, rotateY:'50deg', translateZ:200});
-    Transr.transform({el:document.body, value: "rotateY(50deg) translateZ(200px)");
+    Transr.transform({el:document.body, value: "rotateY(50deg) translateZ(200px)"});
 
 
 There's a method for (re)setting properties immediately without transition. No hash here, to save space.
@@ -128,9 +130,10 @@ All methods can take an array as parameter, which means that multiple separate t
 
 Changelog
 ---------
-    0.3     Multiple transition support and additional helpers
-    0.2     Added AMD module definition
-    0.1     Initial release
+    0.3.0   Oct 19, 2013    Multiple transition support, delay and additional helpers
+    0.2.0   Sep 10, 2013    Added AMD module definition
+    0.1.1   May 15, 2013    Test for availability of 3d transforms; Immediate parameter for speeding up drag
+    0.1.0   Jan 2, 2013     Initial release
 
 License
 -------

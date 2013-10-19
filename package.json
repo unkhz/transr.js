@@ -1,6 +1,6 @@
 {
   "name": "transr.js",
-  "description": "Minimalistic CSS3 Transitions and translations helper with feature detection and fallback",
+  "description": "Minimalistic CSS3 Transitions and transforms helper with feature detection and fallback",
   "author": {
     "name": "Juhani Pelli",
     "email": "juhani.pelli@gmail.com"

@@ -6,7 +6,7 @@
   "authors": [
     "Juhani Pelli <juhani.pelli@gmail.com>"
   ],
-  "description": "Minimalistic CSS3 Transitions and translations helper with feature detection and fallback",
+  "description": "Minimalistic CSS3 Transitions and transforms helper with feature detection and fallback",
   "keywords": [
     "javascript",
     "css",
