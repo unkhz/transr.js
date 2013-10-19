@@ -10,7 +10,7 @@ Features
   * Detects vendor specific CSS properties and uses only one
   * Provides fallback method for unsupported style properties
   * Provides complete callback for operations after completion of transition
-  * Resets transition style properties after completion, because lingering transition 
+  * Resets transition style properties after completion, because lingering transition
     settings tend to cause issues in some Android devices
   * Transparent, no additional layer of property names
   * Pure JavaScript, no library dependencies
@@ -30,12 +30,12 @@ Basic properties can be transitioned with Transr.transition method.
         fallback:function(){
             console.log("your browser does not support transitions");
         },
-        complete:function(){
+        complete:function(element, propertyName){
             console.log("transition was completed, either with fallback or normal method");
         }
     });
 
-There's also a convenience method for translate transforms, in which only the transitioning dimension needs to be defined. Support for 3D and 2D translate transforms is detected automatically.
+There's also a convenience method for transforms, in which only the transitioning dimension needs to be defined. Support for 3D and 2D transforms is detected automatically.
 
     Transr.translate({
         el:document.body,
@@ -54,22 +54,38 @@ There's also a convenience method for translate transforms, in which only the tr
             document.body.style.left = '50%';
             document.body.style.top = 0;
         },
-        complete:function(){
+        complete:function(element, propertyName){
             console.log("transition was completed, either with fallback or normal method");
         }
     });
 
-When translating on touchmove/pointer event or on an animation frame, the speed of the operation is crucial. A few milliseconds can be saved by skipping the transition entirely (in contrast to using 0s duration).
+When transforming on touchmove/pointer event or on an animation frame, the speed of the operation is crucial. A few milliseconds can be saved by skipping the transition entirely (in contrast to using 0s duration).
 
     Transr.translate({
         el:document.body,
         x:touch.diffX,
         use3d:true,
         immediate:true,
-        complete:function(){
+        complete:function(element, propertyName){
             console.log("Transform was immediately set and completed without going to event loop");
         }
     });
+
+All the other transition functions are available and work with the same parameters as the translate method.
+
+    Transr.translate({el:document.body, x:'50deg', y:40});
+    Transr.rotate({el:document.body, x:'50deg', y:40});
+    Transr.scale({el:document.body, x:0.5, y:'1.2'});
+    Transr.skew({el:document.body, x:10, y:'50deg'});
+
+The transforms can also be set with a more general transform method. You can use the string value parameter to save some clock cycles, but in that case the values need to have units specified.
+
+    Transr.transform({el:document.body, translateX:'50px', translateY:40});
+    Transr.transform({el:document.body, rotateX:'50deg', rotateY:40});
+    Transr.transform({el:document.body, scaleX:0.5, skaleY:'1.2'});
+    Transr.transform({el:document.body, skewX:10, rotateY:'50deg', translateZ:200});
+    Transr.transform({el:document.body, value: "rotateY(50deg) translateZ(200px)");
+
 
 There's a method for (re)setting properties immediately without transition. No hash here, to save space.
 
@@ -84,6 +100,28 @@ There's a method for (re)setting properties immediately without transition. No h
 And if the methods are not enough, you can just get the property and the sky will be the limit.
 
     var prop = Transr.getStyleProperty('transform');
+
+
+Multiple transitions
+--------------------
+
+All methods can take an array as parameter, which means that multiple separate transitions will be started at the same time. This is useful in complex animation situations. In this case the second parameter will be a default set of options that is applied to all of the transitions (overridden by the options in the first parameter).
+
+    Transr.transform([
+        {translateX:'50px'},
+        {translateY:40}
+    ], {
+        el:document.body,
+        duration:'1s'
+    });
+
+    Transr.transition([
+        {property:'opacity', value:0.33},
+        {property:'background-color', value:black}
+    ], {
+        el:document.body,
+        duration:'1s'
+    });
 
 
 License

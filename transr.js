@@ -29,7 +29,7 @@
         arraySlice = Array.prototype.slice,
 
         // default properties for transition
-        transitionDefaults = {
+        globalDefaults = {
             el:null,
             duration:"0.5s",
             timingFunction:"ease",
@@ -40,7 +40,13 @@
             use3d:true,             // use translate3d if possible
             immediate:false         // skip transition entirely for faster response
         },
-        testEl = document.createElement('div');
+        testEl = document.createElement('div'),
+        properties = {},
+        possibleTransforms = {};
+
+    function isValid(value) {
+        return value !== undefined && value !== null;
+    }
 
     // object helper method, copied from Mirin.js
     function extend() {
@@ -58,8 +64,6 @@
         return dest;
     }
 
-    var properties = {},
-        transforms = {};
     function getStyleProperty(property) {
         if ( properties[property] ) { return properties[property]; }
 
@@ -85,12 +89,12 @@
         }
     }
 
-    function hasTransform(transformFunction) {
+    function canTransform(transformFunction) {
         var transformProp = getStyleProperty('transform');
 
         if ( !transformProp ) { return false; }
 
-        if ( transforms[transformFunction] !== undefined ) { return transforms[transformFunction]; }
+        if ( possibleTransforms[transformFunction] !== undefined ) { return possibleTransforms[transformFunction]; }
 
         var el = document.createElement('div');
         el.style[transformProp] = "";
@@ -98,17 +102,24 @@
 
         document.body.appendChild(el);
         var compiledTransform = el.style[transformProp],
-            has = typeof compiledTransform === typeof String && compiledTransform.length > 0;
+            has = typeof compiledTransform === typeof "" && compiledTransform.length > 0;
         document.body.removeChild(el);
 
-        //console.log(transformProp + ', ' + transformFunction + ', ' + has);
 
-        return transforms[transformFunction] = has;
+        return possibleTransforms[transformFunction] = has;
     }
 
-    function buildDimensionString(val) {
-        if ( val === undefined ) { val = "0px"; }
-        return typeof val ===  typeof Number ? val.toString() + "px" : val;
+    function buildDimensionString(val, aMethod) {
+        var method = aMethod || 'translate',
+            map = {
+                translate:'px',
+                rotate:'deg',
+                scale:'',
+                skew:'deg'
+            }, suffix = map[method];
+        // undefined == 0, null == null
+        if ( val === undefined ) { val = "0" + suffix; }
+        return typeof val ===  typeof 1 ? val.toString() + suffix : val;
     }
 
     function unbindTransitionEnd(el, listener) {
@@ -131,15 +142,9 @@
         }
     }
 
-    function buildSingleTransition(aOptions) {
-
-    }
-
     // set any style property value with transition and fallback
-
-    function transition(aOptions) {
-        var options = extend({},transitionDefaults,aOptions),
-            transitionShorthandProperty = getStyleProperty("transition"),
+    function transition(options) {
+        var transitionShorthandProperty = getStyleProperty("transition"),
             transitionProperty = getStyleProperty("transitionProperty"),
             transitionDuration = getStyleProperty("transitionDuration"),
             transitionTimingFunction = getStyleProperty("transitionTimingFunction"),
@@ -153,11 +158,12 @@
             } else {
                 options.el.style[vendorSpecificProperty] = options.value;
             }
-            if (options.complete) { options.complete(options.el); }
+            if (options.complete) { options.complete(options.el, options.property); }
         } else {
             var el = options.el,
                 vendor = transitionProperty.replace(/Transition.*$/, ''),
-                transitionValue = getStyleCssProperty(options.property) + " " + options.duration + " " + options.timingFunction,
+                vendorCSSProperty = getStyleCssProperty(options.property),
+                transitionValue = vendorCSSProperty + " " + options.duration + " " + options.timingFunction,
                 durationInMS = Number(options.duration.replace(/[^0-9.]/g,'')) * 1000,
                 fallbackDurationInMS = durationInMS + 1500,
                 transitionEnded = false,
@@ -165,8 +171,8 @@
                 onTransitionEnd = function(e){
                     // console.log("Transr onTransitionEnd", e ? e.target : 'no event', transitionShorthandProperty, vendorSpecificProperty, transitionValue, el.id, fallbackDurationInMS);
 
-                    // check that we react on the correct element's transitionend
-                    if ( e.target !== el ) { return; }
+                    // check that we react on the correct element and property
+                    if ( e.target !== el || e.propertyName !==  vendorCSSProperty ) { return; }
 
                     if ( transitionEnded ) { return; }
                     transitionEnded = true;
@@ -180,15 +186,15 @@
                     // make sure all possible fallback timeouts get cleared
                     clearTimeout(el.timeoutId);
 
-                    if (options.complete) { options.complete(options.el); }
+                    if (options.complete) { options.complete(options.el, options.property); }
                 };
 
-            /* console.log("Transr", "transition", el.id ? el.id : el.nodeName,
+            /*console.log("Transr", "transition", el.id ? el.id : el.nodeName,
                 "|", transitionShorthandProperty, transitionValue,
                 "|", "el.style."+vendorSpecificProperty, "=", options.value
-            ); */
+            );*/
 
-
+            //console.log(transitionShorthandProperty, transitionValue);
             options.el.style[transitionShorthandProperty] = transitionValue;
 
             //console.log(options.el.style[vendorSpecificProperty], options.value);
@@ -213,71 +219,94 @@
             // FIXME: is this ok? setting a custom property on an element breaks its hidden class
             // but then again using data-attribute would be terribly slow
             clearTimeout(options.el.timeoutId);
-            options.el.timeoutId = setTimeout(onTransitionEnd, fallbackDurationInMS, {target:options.el});
+            options.el.timeoutId = setTimeout(onTransitionEnd, fallbackDurationInMS, {
+                target:options.el,
+                propertyName:vendorCSSProperty
+            });
 
         }
     }
 
+    function buildTransformFunctionString(options, transformProp) {
+        var i,j,ilen,jlen,k,v,
+            methods = ['translate','rotate','scale','skew'],
+            axes = ['X','Y','Z'],
+            str = options.el.style[transformProp] + " ";
+        for ( i=0, ilen=methods.length;i<ilen;i++ ) {
+            for ( j=0, jlen=axes.length;j<jlen;j++ ) {
+                k=methods[i]+axes[j];
+                v=options[k];
+                if ( isValid(v) ) {
+                    str += k + '(' + buildDimensionString(v,methods[i]) + ') ';
+                }
+            }
+        }
+        return str.replace(/\s+$/,'');
+    }
 
-    // set transform:translate3d value with transition and fallback
-
-    function translate(aOptions) {
-
-        var options = extend({},transitionDefaults,aOptions),
-            dimensions = [
-                buildDimensionString(options.x),
-                buildDimensionString(options.y),
-                buildDimensionString(options.z)
-            ],
-            parentFallback = options.fallback,
+    function transform(options) {
+        var parentFallback = options.fallback,
             transformProp = getStyleProperty('transform'),
-            translateFunc = null;
+            transformValue = (options.value ?
+                (options.value.join ?
+                    options.value.join(' ') :
+                    options.value) :
+                buildTransformFunctionString(options, transformProp)),
+            needs3d = !!transformValue.match(/Z/);
 
-        if ( options.use3d && hasTransform('translate3d(0,0,0)') ) {
-            translateFunc = "translate3d(" + dimensions.join(", ") + ")";
-        } else if ( hasTransform('translate(0,0)') && dimensions[2] === "0px" ) {
-            // 2d translate can only be used if z was not defined
-            dimensions.pop();
-            translateFunc = "translate(" + dimensions.join(", ") + ")";
+        if ( options.use3d && canTransform('translate3d(0,0,0)') ) {
+            // 3d works
+        } else if ( canTransform('translate(0,0)') && !needs3d ) {
+            // 2d transform can only be used if Z was not defined
+        } else {
+            options.fail = true;
         }
 
-        if ( options.immediate && transformProp && translateFunc ) {
+        if ( options.immediate && transformProp && !options.fail ) {
             // skip timeouts and whatnot if we are not going to fail
             set(
                 options.el,
                 transformProp,
-                translateFunc
+                transformValue
             );
-            if ( options.complete ) { options.complete(options.el); }
+            if ( options.complete ) { options.complete(options.el, 'transform'); }
         } else {
             transition(extend(options,{
                 property:"transform",
-                value:translateFunc,
+                value:transformValue,
                 fallback:function(){
                     if ( parentFallback ) {
-                        // falls back if transition failed, even if translate works, e.g IE9
+                        // falls back if transition failed, even if transform works, e.g IE9
                         parentFallback();
-                    } else if ( transformProp && translateFunc ) {
-                        set(options.el, transformProp, translateFunc);
+                    } else if ( transformProp && transformValue ) {
+                        set(options.el, transformProp, transformValue);
                     } else {
-                        if ( (options.x !== undefined || options.y !== undefined) &&
+                        // if nothing works and we don't even have fallback
+                        // defined, try fixing the situation with left/top
+                        // even though it will most likely break
+                        if ( (options.translateX !== undefined || options.translateY !== undefined) &&
                             ( !options.el.style.position || options.el.style.position === 'static' )
                         ) {
                             options.el.style.position = 'relative';
                         }
 
-                        if ( options.x !== undefined ) { options.el.style.left = dimensions[0]; }
-                        if ( options.y !== undefined ) { options.el.style.top = dimensions[1]; }
+                        if ( isValid(options.translateX) ) { options.el.style.left = options.translateX; }
+                        if ( isValid(options.translateY) ) { options.el.style.top = options.translateY; }
                     }
                 }
             }));
         }
+    }
 
+    function transformWithPoint(options, methodName) {
+        if ( isValid(options.x) ) { options[methodName+'X'] = options.x; }
+        if ( isValid(options.y) ) { options[methodName+'Y'] = options.y; }
+        if ( isValid(options.z) ) { options[methodName+'Z'] = options.z; }
+        transform(options);
     }
 
 
     // set any style property value with fallback, but without transition
-
     function set(el, property, value, fallbackProperty, fallbackValue) {
         var transitionProperty = getStyleProperty("transition"),
             vendorSpecificProperty = getStyleProperty(property);
@@ -301,18 +330,38 @@
         }
     }
 
+    // process possibly multiple sets of parameters with single method
+    function process(method, params, callSpecificDefaults, transformMethodName) {
+        if ( Object.prototype.toString.call(params) !== '[object Array]' ) { params = [params]; }
+        for ( var i=0, len=params.length; i<len; i++ ) {
+            method(extend({}, globalDefaults, callSpecificDefaults, params[i]), transformMethodName);
+        }
+    }
+
 
     // public api methods
-
-    var self = {
+    return {
         getStyleProperty:getStyleProperty,
+        canTransform:canTransform,
         set:set,
-        transition:transition,
-        translate:translate,
-        hasTransform:hasTransform,
-        transforms:transforms
+        transition:function(options, defaults) {
+            process(transition, options, defaults);
+        },
+        transform:function(options, defaults) {
+            process(transform, options, defaults);
+        },
+        translate:function(options,defaults) {
+            process(transformWithPoint, options, defaults, 'translate');
+        },
+        rotate:function(options,defaults) {
+            process(transformWithPoint, options, defaults, 'rotate');
+        },
+        scale:function(options,defaults) {
+            process(transformWithPoint, options, defaults, 'scale');
+        },
+        skew:function(options,defaults) {
+            process(transformWithPoint, options, defaults, 'skew');
+        }
     };
-
-    return self;
 
 }));
