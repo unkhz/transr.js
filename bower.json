@@ -1,0 +1,28 @@
+{
+  "name": "transr.js",
+  "main": "transr.js",
+  "version": "0.3.0",
+  "homepage": "https://github.com/unkhz/transr.js",
+  "authors": [
+    "Juhani Pelli <juhani.pelli@gmail.com>"
+  ],
+  "description": "Minimalistic CSS3 Transitions and translations helper with feature detection and fallback",
+  "keywords": [
+    "javascript",
+    "css",
+    "transition",
+    "translate",
+    "rotate",
+    "scale",
+    "scew",
+    "3d"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
