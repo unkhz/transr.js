@@ -145,6 +145,13 @@
         test('transform', [{translateX:value(100)}, {skewY:value(100)}]);
         test('transition', {property:'opacity', value:0.1});
         test('transition', [{property:'opacity', value:0.1}, {property:'color', value:'green'}]);
+        test('transition', {property:'opacity', value:0.1, duration:'0s', delay:'0.33s'});
+        test('transition', {property:'opacity', value:0.1, duration:'0s', delay:'0.66s'});
+        test('transition', {property:'opacity', value:0.1, duration:'0s', delay:'1s'});
+        test('transition', {property:'opacity', value:0.1, duration:'0.33s', delay:'0.66s'});
+        test('transition', {property:'opacity', value:0.1, duration:'0.66s', delay:'0.33s'});
+        test('transition', {property:'opacity', value:0.1, duration:'1s', delay:'1s'});
+        test('transition', {property:'opacity', value:0.1, duration:'2s', delay:'1s'});
 
     </script>
 </body>

@@ -26,6 +26,7 @@ Basic properties can be transitioned with Transr.transition method.
         property:'opacity'
         value:'0.5',
         duration:'0.2s',
+        delay:'0.1s',
         timingFunction:'ease',
         fallback:function(){
             console.log("your browser does not support transitions");
@@ -42,6 +43,7 @@ There's also a convenience method for transforms, in which only the transitionin
         x:'50%',
         y:'10%',
         duration:'0.2s',
+        delay:'0.1s',
         timingFunction:'ease',
         use3d:true,
         fallback:function(){

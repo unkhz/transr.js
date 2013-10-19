@@ -33,6 +33,7 @@
             el:null,
             duration:"0.5s",
             timingFunction:"ease",
+            delay:"0s",
             fallback:null,          // method to excecute if tests fail
             complete:null,          // method to execute upon completion of transition
             fail:false,             // force transition to fail
@@ -142,12 +143,17 @@
         }
     }
 
+    function asMS(str) {
+        return Number(str.replace(/[^0-9.]/g,'')) * 1000;
+    }
+
     // set any style property value with transition and fallback
     function transition(options) {
         var transitionShorthandProperty = getStyleProperty("transition"),
             transitionProperty = getStyleProperty("transitionProperty"),
             transitionDuration = getStyleProperty("transitionDuration"),
             transitionTimingFunction = getStyleProperty("transitionTimingFunction"),
+            transitionDelay = getStyleProperty("transitionDelay"),
             vendorSpecificProperty = getStyleProperty(options.property),
             enabled = transitionProperty && transitionDuration && transitionTimingFunction && vendorSpecificProperty ? true : false;
 
@@ -163,8 +169,8 @@
             var el = options.el,
                 vendor = transitionProperty.replace(/Transition.*$/, ''),
                 vendorCSSProperty = getStyleCssProperty(options.property),
-                transitionValue = vendorCSSProperty + " " + options.duration + " " + options.timingFunction,
-                durationInMS = Number(options.duration.replace(/[^0-9.]/g,'')) * 1000,
+                transitionValue = vendorCSSProperty + " " + options.duration + " " + options.timingFunction + " " + options.delay,
+                durationInMS = asMS(options.duration) + asMS(options.delay),
                 fallbackDurationInMS = durationInMS + 1500,
                 transitionEnded = false,
 
