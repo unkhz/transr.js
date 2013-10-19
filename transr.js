@@ -155,7 +155,8 @@
             transitionTimingFunction = getStyleProperty("transitionTimingFunction"),
             transitionDelay = getStyleProperty("transitionDelay"),
             vendorSpecificProperty = getStyleProperty(options.property),
-            enabled = transitionProperty && transitionDuration && transitionTimingFunction && vendorSpecificProperty ? true : false;
+            enabled = transitionProperty && transitionDuration && transitionTimingFunction && vendorSpecificProperty ? true : false,
+            endTimeoutId;
 
         if ( !enabled || options.fail ) {
             // fallback
@@ -190,7 +191,7 @@
                     el.style[vendorSpecificProperty] = options.value;
 
                     // make sure all possible fallback timeouts get cleared
-                    clearTimeout(el.timeoutId);
+                    clearTimeout(endTimeoutId);
 
                     if (options.complete) { options.complete(options.el, options.property); }
                 };
@@ -222,10 +223,8 @@
             }
 
             // fallback a little later, make sure old timeout is cleared when new transition is issued
-            // FIXME: is this ok? setting a custom property on an element breaks its hidden class
-            // but then again using data-attribute would be terribly slow
-            clearTimeout(options.el.timeoutId);
-            options.el.timeoutId = setTimeout(onTransitionEnd, fallbackDurationInMS, {
+            clearTimeout(endTimeoutId);
+            endTimeoutId = setTimeout(onTransitionEnd, fallbackDurationInMS, {
                 target:options.el,
                 propertyName:vendorCSSProperty
             });
