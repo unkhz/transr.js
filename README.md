@@ -126,6 +126,12 @@ All methods can take an array as parameter, which means that multiple separate t
     });
 
 
+Changelog
+---------
+    0.3     Multiple transition support and additional helpers
+    0.2     Added AMD module definition
+    0.1     Initial release
+
 License
 -------
 
