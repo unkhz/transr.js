@@ -130,6 +130,7 @@ All methods can take an array as parameter, which means that multiple separate t
 
 Changelog
 ---------
+    0.3.1   Dec 20, 2013    Fix duplicate transition functions issue
     0.3.0   Oct 19, 2013    Multiple transition support, delay and additional helpers
     0.2.0   Sep 10, 2013    Added AMD module definition
     0.1.1   May 15, 2013    Test for availability of 3d transforms; Immediate parameter for speeding up drag
