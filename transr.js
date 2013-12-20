@@ -242,6 +242,7 @@
                 k=methods[i]+axes[j];
                 v=options[k];
                 if ( isValid(v) ) {
+                    str = str.replace(new RegExp(k+'\\([^\\)]*\\)\\s+'), ' ');
                     str += k + '(' + buildDimensionString(v,methods[i]) + ') ';
                 }
             }
