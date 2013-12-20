@@ -1,7 +1,7 @@
 {
   "name": "transr.js",
   "main": "transr.js",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "homepage": "https://github.com/unkhz/transr.js",
   "authors": [
     "Juhani Pelli <juhani.pelli@gmail.com>"
