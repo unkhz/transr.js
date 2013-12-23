@@ -39,7 +39,10 @@
             fail:false,             // force transition to fail
             // translate specific settings
             use3d:true,             // use translate3d if possible
-            immediate:false         // skip transition entirely for faster response
+            immediate:false,        // skip transition entirely for faster response
+            // resets the transition and value after transitionend. sometimes
+            // transition should not be reset automatically (e.g. touch movement)
+            resetTransitionAfterTransitionEnd: true
         },
         testEl = document.createElement('div'),
         properties = {},
@@ -187,8 +190,10 @@
                     unbindTransitionEnd(options.el, onTransitionEnd);
 
                     //console.log("Transr reset transition", el.id, transformValue);
-                    el.style[transitionShorthandProperty] = "";
-                    el.style[vendorSpecificProperty] = options.value;
+                    if  ( options.resetTransitionAfterTransitionEnd ) {
+                        el.style[transitionShorthandProperty] = "";
+                        el.style[vendorSpecificProperty] = options.value;
+                    }
 
                     // make sure all possible fallback timeouts get cleared
                     clearTimeout(endTimeoutId);
@@ -215,7 +220,10 @@
                 if ( durationInMS === 0 ) {
                     fallbackDurationInMS = 1;
                 } else {
-                    // FIXME: this does not actually unbind the earlier transitions since the function is always new
+                    // FIXME: this does not actually unbind the earlier
+                    // transitions since the function is always new, which
+                    // results in multiple triggers for onTransitionEnd when
+                    // transition is started multiple times
                     unbindTransitionEnd(options.el, onTransitionEnd);
                     bindTransitionEnd(options.el, onTransitionEnd);
                 }

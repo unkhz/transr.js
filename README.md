@@ -105,6 +105,20 @@ And if the methods are not enough, you can just get the property and the sky wil
 
     var prop = Transr.getStyleProperty('transform');
 
+All options
+-------
+
+    el                                  // DOM element
+    duration                            // value for transition duration property
+    timingFunction                      // value for transition timing function property
+    delay                               // value for transition delay property
+    fallback                            // callback to excecute if tests fail
+    complete                            // callback to execute upon completion of transition
+    fail                                // if true, forces transition to fail
+    use3d                               // if true, uses translate3d if possible
+    immediate                           // if true, skips transition entirely for faster response
+    resetTransitionAfterTransitionEnd   // if true, resets the transition and value after transitionend
+
 
 Multiple transitions
 --------------------
@@ -130,6 +144,7 @@ All methods can take an array as parameter, which means that multiple separate t
 
 Changelog
 ---------
+    0.3.2   Dec 22, 2013    Added option for enabling or disabling reset of transition after transitionend
     0.3.1   Dec 20, 2013    Fix duplicate transition functions issue
     0.3.0   Oct 19, 2013    Multiple transition support, delay and additional helpers
     0.2.0   Sep 10, 2013    Added AMD module definition
