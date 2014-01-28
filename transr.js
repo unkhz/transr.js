@@ -188,7 +188,7 @@
                 transitionEnded = false;
 
             options.onTransitionEnd = function(e){
-                console.log("Transr onTransitionEnd", e ? e.target : 'no event', transitionShorthandProperty, vendorSpecificProperty, transitionValue, el.id, fallbackDurationInMS);
+                //console.log("Transr onTransitionEnd", e ? e.target : 'no event', transitionShorthandProperty, vendorSpecificProperty, transitionValue, el.id, fallbackDurationInMS);
 
                 // check that we react on the correct element and property
                 if ( e.target !== el || e.propertyName !==  vendorCSSProperty ) { return; }
