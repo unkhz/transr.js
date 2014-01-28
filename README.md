@@ -118,6 +118,8 @@ All options
     use3d                               // if true, uses translate3d if possible
     immediate                           // if true, skips transition entirely for faster response
     resetTransitionAfterTransitionEnd   // if true, resets the transition and value after transitionend
+    transitionId                        // If defined, all previous transitionend event listeners with
+                                        // the same transitionId are cleared before and after the transition
 
 
 Multiple transitions
@@ -144,6 +146,7 @@ All methods can take an array as parameter, which means that multiple separate t
 
 Changelog
 ---------
+    0.3.3   Jan 28, 2014    Added possibility to reset old event listeners by using transitionId parameter
     0.3.2   Dec 22, 2013    Added option for enabling or disabling reset of transition after transitionend
     0.3.1   Dec 20, 2013    Fix duplicate transition functions issue
     0.3.0   Oct 19, 2013    Multiple transition support, delay and additional helpers

@@ -42,11 +42,13 @@
             immediate:false,        // skip transition entirely for faster response
             // resets the transition and value after transitionend. sometimes
             // transition should not be reset automatically (e.g. touch movement)
-            resetTransitionAfterTransitionEnd: true
+            resetTransitionAfterTransitionEnd: true,
+            transitionId:false          // Unique Id for the transition, can be used to clear the complete listener
         },
         testEl = document.createElement('div'),
         properties = {},
-        possibleTransforms = {};
+        possibleTransforms = {},
+        transitionCollection = {};
 
     function isValid(value) {
         return value !== undefined && value !== null;
@@ -146,6 +148,13 @@
         }
     }
 
+    function removeEventListeners(options) {
+        if ( options ) {
+            unbindTransitionEnd(options.el, options.onTransitionEnd);
+            clearTimeout(options.endTimeoutId);
+        }
+    }
+
     function asMS(str) {
         return Number(str.replace(/[^0-9.]/g,'')) * 1000;
     }
@@ -176,30 +185,33 @@
                 transitionValue = vendorCSSProperty + " " + options.duration + " " + options.timingFunction + " " + options.delay,
                 durationInMS = asMS(options.duration) + asMS(options.delay),
                 fallbackDurationInMS = durationInMS + 1500,
-                transitionEnded = false,
+                transitionEnded = false;
 
-                onTransitionEnd = function(e){
-                    // console.log("Transr onTransitionEnd", e ? e.target : 'no event', transitionShorthandProperty, vendorSpecificProperty, transitionValue, el.id, fallbackDurationInMS);
+            options.onTransitionEnd = function(e){
+                console.log("Transr onTransitionEnd", e ? e.target : 'no event', transitionShorthandProperty, vendorSpecificProperty, transitionValue, el.id, fallbackDurationInMS);
 
-                    // check that we react on the correct element and property
-                    if ( e.target !== el || e.propertyName !==  vendorCSSProperty ) { return; }
+                // check that we react on the correct element and property
+                if ( e.target !== el || e.propertyName !==  vendorCSSProperty ) { return; }
 
-                    if ( transitionEnded ) { return; }
-                    transitionEnded = true;
+                if ( transitionEnded ) { return; }
+                transitionEnded = true;
 
-                    unbindTransitionEnd(options.el, onTransitionEnd);
+                removeEventListeners(options);
+                if ( options.transitionId ) {
+                    delete transitionCollection[options.transitionId];
+                }
 
-                    //console.log("Transr reset transition", el.id, transformValue);
-                    if  ( options.resetTransitionAfterTransitionEnd ) {
-                        el.style[transitionShorthandProperty] = "";
-                        el.style[vendorSpecificProperty] = options.value;
-                    }
+                //console.log("Transr reset transition", el.id, transformValue);
+                if  ( options.resetTransitionAfterTransitionEnd ) {
+                    el.style[transitionShorthandProperty] = "";
+                    el.style[vendorSpecificProperty] = options.value;
+                }
 
-                    // make sure all possible fallback timeouts get cleared
-                    clearTimeout(endTimeoutId);
+                // make sure all possible fallback timeouts get cleared
+                clearTimeout(endTimeoutId);
 
-                    if (options.complete) { options.complete(options.el, options.property); }
-                };
+                if (options.complete) { options.complete(options.el, options.property); }
+            };
 
             /*console.log("Transr", "transition", el.id ? el.id : el.nodeName,
                 "|", transitionShorthandProperty, transitionValue,
@@ -220,23 +232,22 @@
                 if ( durationInMS === 0 ) {
                     fallbackDurationInMS = 1;
                 } else {
-                    // FIXME: this does not actually unbind the earlier
-                    // transitions since the function is always new, which
-                    // results in multiple triggers for onTransitionEnd when
-                    // transition is started multiple times
-                    unbindTransitionEnd(options.el, onTransitionEnd);
-                    bindTransitionEnd(options.el, onTransitionEnd);
+                    bindTransitionEnd(options.el, options.onTransitionEnd);
                 }
 
             }
 
             // fallback a little later, make sure old timeout is cleared when new transition is issued
-            clearTimeout(endTimeoutId);
-            endTimeoutId = setTimeout(onTransitionEnd, fallbackDurationInMS, {
+            clearTimeout(options.endTimeoutId);
+            options.endTimeoutId = setTimeout(options.onTransitionEnd, fallbackDurationInMS, {
                 target:options.el,
                 propertyName:vendorCSSProperty
             });
 
+            if ( options.transitionId ) {
+                removeEventListeners(transitionCollection[options.transitionId]);
+                transitionCollection[options.transitionId] = options;
+            }
         }
     }
 
