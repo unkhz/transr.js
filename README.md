@@ -146,6 +146,7 @@ All methods can take an array as parameter, which means that multiple separate t
 
 Changelog
 ---------
+    0.3.4   Jan 29, 2014    Also reset immediate transitions when transitionId is used
     0.3.3   Jan 28, 2014    Added possibility to reset old event listeners by using transitionId parameter
     0.3.2   Dec 22, 2013    Added option for enabling or disabling reset of transition after transitionend
     0.3.1   Dec 20, 2013    Fix duplicate transition functions issue

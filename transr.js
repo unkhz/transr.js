@@ -288,6 +288,11 @@
         }
 
         if ( options.immediate && transformProp && !options.fail ) {
+            // always reset if transitionId is used
+            if ( options.transitionId ) {
+                removeEventListeners(transitionCollection[options.transitionId]);
+            }
+
             // skip timeouts and whatnot if we are not going to fail
             set(
                 options.el,
