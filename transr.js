@@ -1,5 +1,5 @@
 /*global define*/
-/*
+/**
  * Transr.js
  * Minimalistic CSS3 Transitions and translations helper with feature detection and fallback
  *
@@ -7,7 +7,7 @@
  * https://github.com/unkhz/transr.js/
  *
  * MIT License
- *
+ * @namespace Transr
  */
 
 ;(function (root, factory) {
@@ -70,6 +70,14 @@
         return dest;
     }
 
+    /**
+     * Return vendor prefixed version of a style property. I.e. Translate a spec style
+     * property into the form that can be parsed by the current browser.
+     *
+     * @param {String} property Spec property name in camelCase E.g. transformOrigin
+     * @return {String} Property name with a vendor perfix (if needed) in camelCase E.g. webkitTransformOrigin
+     * @memberOf Transr
+     */
     function getStyleProperty(property) {
         if ( properties[property] ) { return properties[property]; }
 
@@ -86,6 +94,15 @@
         return properties[property] = returnProperty;
     }
 
+    /**
+     * Return vendor prefixed version of a style property in the dash notation used in
+     * DOM element attributes.
+     *
+     * @param {String} property Spec property name in camelCase E.g. backgroundColor
+     * @return {String} Property name with a vendor perfix (if needed) in dash-notation E.g. background-color
+     * @private
+     * @memberOf Transr
+     */
     function getStyleCssProperty(property) {
         var p = getStyleProperty(property);
         if ( p !== property ) {
@@ -95,6 +112,13 @@
         }
     }
 
+    /**
+     * Check if a speficifc transform function is supported by the current browser
+     *
+     * @param  {String} transformFunction Full string that is a valid value for transform CSS property. E.g. translateX(10px)
+     * @return {Boolean} True if the specified transform function is supported by the current browser
+     * @memberOf Transr
+     */
     function canTransform(transformFunction) {
         var transformProp = getStyleProperty('transform');
 
@@ -336,7 +360,16 @@
     }
 
 
-    // set any style property value with fallback, but without transition
+    /**
+     * Set any style property value with fallback, but without transition
+     *
+     * @param {Element} el DOM element to be modified
+     * @param {String} property The property name to be modified in camelCase E.g. transformOrigin
+     * @param {String|Number} value The value to be set. Can be a valid string E.g. "10px" or a numeric value in which case the unit is analyzed based on the property.
+     * @param {String} fallBackProperty The fallback property name to be modified in camelCase E.g. transformOrigin. Modification happens only if the actual property cannot be modified.
+     * @param {String|Number} value The fallbackvalue to be set. Can be a valid string E.g. "10px" or a numeric value in which case the unit is analyzed based on the property.
+     * @memberOf Transr
+     */
     function set(el, property, value, fallbackProperty, fallbackValue) {
         var transitionProperty = getStyleProperty("transition"),
             vendorSpecificProperty = getStyleProperty(property);
@@ -369,26 +402,72 @@
     }
 
 
-    // public api methods
     return {
         getStyleProperty:getStyleProperty,
         canTransform:canTransform,
         set:set,
+        /**
+         * Start a CSS transition for an element
+         *
+         * @param {Transr.TransrOptions} options The options object that defines the transition
+         * @param {Transr.TransrOptions} options Another options object that is extended to the initial one
+         * @memberOf Transr
+         */
         transition:function(options, defaults) {
             process(transition, options, defaults);
         },
+
+        /**
+         * Modify CSS transform for an element
+         *
+         * @param {Transr.TransrOptions} options The options object that defines the transition
+         * @param {Transr.TransrOptions} options Another options object that is extended to the initial one
+         * @memberOf Transr
+         */
         transform:function(options, defaults) {
             process(transform, options, defaults);
         },
+
+        /**
+         * Modify CSS transform translation for an element
+         *
+         * @param {Transr.TransrOptions} options The options object that defines the transition
+         * @param {Transr.TransrOptions} options Another options object that is extended to the initial one
+         * @memberOf Transr
+         */
         translate:function(options,defaults) {
             process(transformWithPoint, options, defaults, 'translate');
         },
+
+        /**
+         * Modify CSS transform rotation for an element
+         *
+         * @param {Transr.TransrOptions} options The options object that defines the transition
+         * @param {Transr.TransrOptions} options Another options object that is extended to the initial one
+         * @memberOf Transr
+         */
         rotate:function(options,defaults) {
             process(transformWithPoint, options, defaults, 'rotate');
         },
+
+        /**
+         * Modify a CSS transform scaling for an element
+         *
+         * @param {Transr.TransrOptions} options The options object that defines the transition
+         * @param {Transr.TransrOptions} options Another options object that is extended to the initial one
+         * @memberOf Transr
+         */
         scale:function(options,defaults) {
             process(transformWithPoint, options, defaults, 'scale');
         },
+
+        /**
+         * Modify a CSS transform skewing for an element
+         *
+         * @param {Transr.TransrOptions} options The options object that defines the transition
+         * @param {Transr.TransrOptions} options Another options object that is extended to the initial one
+         * @memberOf Transr
+         */
         skew:function(options,defaults) {
             process(transformWithPoint, options, defaults, 'skew');
         }
