@@ -43,9 +43,9 @@
          * @property {Boolean} [immediate=true] If true, transition is skipped entirely. Useful for situations where immediateness is not decided by the caller.
          * @property {Boolean} [resetTransitionAfterTransitionEnd=true] If true, transition and value are reset after transitionend event is triggered. Useful for situations where transition should not be reset automatically. E.g. acting on touch movement.
          * @property {String} [transitionId] If set, the transition will be handled as a singleton. I.e. if a transition with the same ID already exist for the same DOM element, it will be cleared and/or replaced.
-         * @property {Transr.CSSValue} x
-         * @property {Transr.CSSValue} y
-         * @property {Transr.CSSValue} z
+         * @property {Transr.CSSValue} x Value for a CSS property defined by the function call. E.g. Transr.translate({x:10}) will modify the X translation position.
+         * @property {Transr.CSSValue} y Value for a CSS property defined by the function call. E.g. Transr.translate({y:10}) will modify the Y translation position.
+         * @property {Transr.CSSValue} z Value for a CSS property defined by the function call. E.g. Transr.translate({z:10}) will modify the Z translation position.
          * @property {Transr.CSSValue} translateX
          * @property {Transr.CSSValue} translateY
          * @property {Transr.CSSValue} translateZ
