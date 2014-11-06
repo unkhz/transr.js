@@ -1,13 +1,5 @@
 <a name="Transr"></a>
 #Transr
-Transr.js
-Minimalistic CSS3 Transitions and translations helper with feature detection and fallback
-
-Juhani Pelli <juhani.pelli@gmail.com>
-https://github.com/unkhz/transr.js/
-
-MIT License
-
 **Members**
 
 * [Transr](#Transr)
@@ -20,6 +12,7 @@ MIT License
   * [Transr.rotate(options)](#Transr.rotate)
   * [Transr.scale(options)](#Transr.scale)
   * [Transr.skew(options)](#Transr.skew)
+  * [type: Transr.CSSValue](#Transr.CSSValue)
   * [type: Transr.TransrOptions](#Transr.TransrOptions)
 
 <a name="Transr.getStyleProperty"></a>
@@ -49,9 +42,9 @@ Set any style property value with fallback, but without transition
 
 - el `Element` - DOM element to be modified  
 - property `String` - The property name to be modified in camelCase E.g. transformOrigin  
-- value `String` | `Number` - The value to be set. Can be a valid string E.g. "10px" or a numeric value in which case the unit is analyzed based on the property.  
+- value <code>[CSSValue](#Transr.CSSValue)</code> - The value to be set  
 - fallBackProperty `String` - The fallback property name to be modified in camelCase E.g. transformOrigin. Modification happens only if the actual property cannot be modified.  
-- value `String` | `Number` - The fallbackvalue to be set. Can be a valid string E.g. "10px" or a numeric value in which case the unit is analyzed based on the property.  
+- value <code>[CSSValue](#Transr.CSSValue)</code> - The fallbackvalue to be set  
 
 <a name="Transr.transition"></a>
 ##Transr.transition(options)
@@ -101,6 +94,12 @@ Modify a CSS transform skewing for an element
 
 - options <code>[TransrOptions](#Transr.TransrOptions)</code> - The options object that defines the transition  
 
+<a name="Transr.CSSValue"></a>
+##type: Transr.CSSValue
+Transr CSS value can be defined as a valid string E.g. "10px" or a numeric value
+in which case the unit is analyzed based on the property. E.g. rotation defaults
+to "deg", dimensions default to "px"
+
 <a name="Transr.TransrOptions"></a>
 ##type: Transr.TransrOptions
 **Properties**
@@ -116,4 +115,19 @@ Modify a CSS transform skewing for an element
 - immediate `Boolean` - If true, transition is skipped entirely. Useful for situations where immediateness is not decided by the caller.  
 - resetTransitionAfterTransitionEnd `Boolean` - If true, transition and value are reset after transitionend event is triggered. Useful for situations where transition should not be reset automatically. E.g. acting on touch movement.  
 - transitionId `String` - If set, the transition will be handled as a singleton. I.e. if a transition with the same ID already exist for the same DOM element, it will be cleared and/or replaced.  
+- x <code>[CSSValue](#Transr.CSSValue)</code>  
+- y <code>[CSSValue](#Transr.CSSValue)</code>  
+- z <code>[CSSValue](#Transr.CSSValue)</code>  
+- translateX <code>[CSSValue](#Transr.CSSValue)</code>  
+- translateY <code>[CSSValue](#Transr.CSSValue)</code>  
+- translateZ <code>[CSSValue](#Transr.CSSValue)</code>  
+- rotateX <code>[CSSValue](#Transr.CSSValue)</code>  
+- rotateY <code>[CSSValue](#Transr.CSSValue)</code>  
+- rotateZ <code>[CSSValue](#Transr.CSSValue)</code>  
+- scaleX <code>[CSSValue](#Transr.CSSValue)</code>  
+- scaleY <code>[CSSValue](#Transr.CSSValue)</code>  
+- scaleZ <code>[CSSValue](#Transr.CSSValue)</code>  
+- skewX <code>[CSSValue](#Transr.CSSValue)</code>  
+- skewY <code>[CSSValue](#Transr.CSSValue)</code>  
+- skewZ <code>[CSSValue](#Transr.CSSValue)</code>  
 

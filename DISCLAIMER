@@ -1,0 +1,9 @@
+/**
+ * Transr.js
+ * Minimalistic CSS3 Transitions and translations helper with feature detection and fallback
+ *
+ * Juhani Pelli <juhani.pelli@gmail.com>
+ * https://github.com/unkhz/transr.js/
+ *
+ * MIT License Copyright 2012-2014 Juhani Pelli
+ */

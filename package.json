@@ -1,16 +1,20 @@
 {
-  "name": "transr.js",
+  "name": "transr",
   "description": "Minimalistic CSS3 Transitions and transforms helper with feature detection and fallback",
   "author": {
     "name": "Juhani Pelli",
     "email": "juhani.pelli@gmail.com"
   },
-  "version": "0.3.4",
+  "version": "0.3.5",
   "engines": {},
   "private": false,
   "dependencies": {
   },
   "devDependencies": {
+    "grunt": "latest",
+    "grunt-contrib-clean": "latest",
+    "grunt-contrib-uglify": "latest",
+    "grunt-contrib-watch": "latest"
   },
   "scripts": {
   }
