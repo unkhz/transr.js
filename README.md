@@ -82,7 +82,7 @@ All the other transition functions are available and work with the same paramete
     Transr.scale({el:document.body, x:0.5, y:'1.2'});
     Transr.skew({el:document.body, x:10, y:'50deg'});
 
-The transforms can also be set with a more general transform method. You can use the string value parameter to save some clock cycles, but in that case the values need to have units specified.
+The transforms can also be set with a more generic transform method. You can use the string value parameter to save some clock cycles, but in that case the values need to have units specified.
 
     Transr.transform({el:document.body, translateX:'50px', translateY:40});
     Transr.transform({el:document.body, rotateX:'50deg', rotateY:40});
@@ -105,22 +105,6 @@ And if the methods are not enough, you can just get the property and the sky wil
 
     var prop = Transr.getStyleProperty('transform');
 
-All options
--------
-
-    el                                  // DOM element
-    duration                            // value for transition duration property
-    timingFunction                      // value for transition timing function property
-    delay                               // value for transition delay property
-    fallback                            // callback to excecute if tests fail
-    complete                            // callback to execute upon completion of transition
-    fail                                // if true, forces transition to fail
-    use3d                               // if true, uses translate3d if possible
-    immediate                           // if true, skips transition entirely for faster response
-    resetTransitionAfterTransitionEnd   // if true, resets the transition and value after transitionend
-    transitionId                        // If defined, all previous transitionend event listeners with
-                                        // the same transitionId are cleared before and after the transition
-
 
 Multiple transitions
 --------------------
@@ -142,6 +126,12 @@ All methods can take an array as parameter, which means that multiple separate t
         el:document.body,
         duration:'1s'
     });
+
+
+All options
+-----------
+
+[See API documentation](/docs/api.md)
 
 
 Changelog

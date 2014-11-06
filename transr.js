@@ -28,22 +28,45 @@
         // minification optimization
         arraySlice = Array.prototype.slice,
 
-        // default properties for transition
+    el                                  // DOM element
+    duration                            // value for transition duration property
+    timingFunction                      // value for transition timing function property
+    delay                               // value for transition delay property
+    fallback                            // callback to excecute if tests fail
+    complete                            // callback to execute upon completion of transition
+    fail                                // if true, forces transition to fail
+    use3d                               // if true, uses translate3d if possible
+    immediate                           // if true, skips transition entirely for faster response
+    resetTransitionAfterTransitionEnd   // if true, resets the transition and value after transitionend
+    transitionId                        // If defined, all previous transitionend event listeners with
+                                        // the same transitionId are cleared before and after the transition
+        /**
+         * @typedef TransrOptions
+         * @property {Element} el The DOM element to be modified
+         * @property {String} [duration="0.5s"] CSS rule; defines how long the transition will last
+         * @property {String} [timingFunction="ease"] CSS rule; defines the easing function to be used. E.g. ease-out will slow down towards the end of the transition
+         * @property {String} [delay="0s"] CSS rule; defines the delay before the transition is started
+         * @property {Function} [fallback] Callback to be excecuted if the property is not supported by the current browser
+         * @property {Function} [complete] Callback to be excecuted after the excecution is completed, whether it was successful or not.
+         * @property {Boolean} [fail=false] If true, forces the operation to fail and the possible fallback to be called. Useful for interruptions and debugging purposes.
+         * @property {Boolean} [use3d=true] If true, 3D transform functions are used when available
+         * @property {Boolean} [immediate=true] If true, transition is skipped entirely. Useful for situations where immediateness is not decided by the caller.
+         * @property {Boolean} [resetTransitionAfterTransitionEnd=true] If true, transition and value are reset after transitionend event is triggered. Useful for situations where transition should not be reset automatically. E.g. acting on touch movement.
+         * @property {String} [transitionId] If set, the transition will be handled as a singleton. I.e. if a transition with the same ID already exist for the same DOM element, it will be cleared and/or replaced.
+         * @memberOf Transr
+         */
         globalDefaults = {
             el:null,
             duration:"0.5s",
             timingFunction:"ease",
             delay:"0s",
-            fallback:null,          // method to excecute if tests fail
-            complete:null,          // method to execute upon completion of transition
-            fail:false,             // force transition to fail
-            // translate specific settings
-            use3d:true,             // use translate3d if possible
-            immediate:false,        // skip transition entirely for faster response
-            // resets the transition and value after transitionend. sometimes
-            // transition should not be reset automatically (e.g. touch movement)
+            fallback:null,
+            complete:null,
+            fail:false,
+            immediate:false,
+            use3d:true,
             resetTransitionAfterTransitionEnd: true,
-            transitionId:false          // Unique Id for the transition, can be used to clear the complete listener
+            transitionId:false
         },
         testEl = document.createElement('div'),
         properties = {},
@@ -406,11 +429,11 @@
         getStyleProperty:getStyleProperty,
         canTransform:canTransform,
         set:set,
+
         /**
          * Start a CSS transition for an element
          *
          * @param {Transr.TransrOptions} options The options object that defines the transition
-         * @param {Transr.TransrOptions} options Another options object that is extended to the initial one
          * @memberOf Transr
          */
         transition:function(options, defaults) {
@@ -421,7 +444,6 @@
          * Modify CSS transform for an element
          *
          * @param {Transr.TransrOptions} options The options object that defines the transition
-         * @param {Transr.TransrOptions} options Another options object that is extended to the initial one
          * @memberOf Transr
          */
         transform:function(options, defaults) {
@@ -432,7 +454,6 @@
          * Modify CSS transform translation for an element
          *
          * @param {Transr.TransrOptions} options The options object that defines the transition
-         * @param {Transr.TransrOptions} options Another options object that is extended to the initial one
          * @memberOf Transr
          */
         translate:function(options,defaults) {
@@ -443,7 +464,6 @@
          * Modify CSS transform rotation for an element
          *
          * @param {Transr.TransrOptions} options The options object that defines the transition
-         * @param {Transr.TransrOptions} options Another options object that is extended to the initial one
          * @memberOf Transr
          */
         rotate:function(options,defaults) {
@@ -454,7 +474,6 @@
          * Modify a CSS transform scaling for an element
          *
          * @param {Transr.TransrOptions} options The options object that defines the transition
-         * @param {Transr.TransrOptions} options Another options object that is extended to the initial one
          * @memberOf Transr
          */
         scale:function(options,defaults) {
@@ -465,7 +484,6 @@
          * Modify a CSS transform skewing for an element
          *
          * @param {Transr.TransrOptions} options The options object that defines the transition
-         * @param {Transr.TransrOptions} options Another options object that is extended to the initial one
          * @memberOf Transr
          */
         skew:function(options,defaults) {
