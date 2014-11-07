@@ -148,7 +148,7 @@ Transr.transition([
 All options
 -----------
 
-[See API documentation](/docs/api.md)
+[See API documentation](http://transr.khz.fi/jsdoc)
 
 
 Changelog

@@ -1,0 +1,9 @@
+id: jsdoc
+title: API Documentation
+abbr: API
+ord: 2
+styles:
+  - docs
+features:
+  - content
+contentFromFile: ../../dist/docs.md

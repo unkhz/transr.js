@@ -1,8 +1,8 @@
 {
   "name": "transr",
-  "main": "transr.js",
-  "version": "0.3.6",
-  "homepage": "https://github.com/unkhz/transr.js",
+  "version": "0.3.7",
+  "main": "dist/transr.min.js",
+  "homepage": "http://transr.khz.fi/",
   "authors": [
     "Juhani Pelli <juhani.pelli@gmail.com>"
   ],
@@ -11,18 +11,17 @@
     "javascript",
     "css",
     "transition",
+    "transform",
     "translate",
     "rotate",
     "scale",
-    "scew",
+    "skew",
     "3d"
   ],
   "license": "MIT",
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
-    "test",
-    "tests"
+    "dist/docs"
   ]
 }

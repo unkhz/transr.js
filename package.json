@@ -1,10 +1,20 @@
 {
   "name": "transr",
+  "version": "0.3.7",
   "description": "Minimalistic CSS3 transitions and transforms helper with feature detection and fallback",
-  "keywords": "css transition transform",
-  "homepage": "https://github.com/unkhz/transr.js",
+  "keywords": [
+    "javascript",
+    "css",
+    "transition",
+    "transform",
+    "translate",
+    "rotate",
+    "scale",
+    "skew",
+    "3d"
+  ],
+  "homepage": "http://transr.khz.fi/",
   "author": "Juhani Pelli <juhani.pelli@gmail.com> (https://github.com/unkhz/)",
-  "version": "0.3.6",
   "dependencies": {},
   "devDependencies": {
     "almost-static-site": "^0.1.2",
@@ -17,7 +27,7 @@
     "lodash": "^2.4.1"
   },
   "scripts": {
-    "build": "grunt release"
+    "build": "grunt release && gulp build --gulpfile node_modules/almost-static-site/Gulpfile.js --site ../../docs/config-production"
   },
   "main": "dist/transr.min.js",
   "repository": {
