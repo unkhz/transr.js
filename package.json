@@ -1,21 +1,31 @@
 {
   "name": "transr",
-  "description": "Minimalistic CSS3 Transitions and transforms helper with feature detection and fallback",
-  "author": {
-    "name": "Juhani Pelli",
-    "email": "juhani.pelli@gmail.com"
-  },
-  "version": "0.3.5",
-  "engines": {},
-  "private": false,
-  "dependencies": {
-  },
+  "description": "Minimalistic CSS3 transitions and transforms helper with feature detection and fallback",
+  "keywords": "css transition transform",
+  "homepage": "https://github.com/unkhz/transr.js",
+  "author": "Juhani Pelli <juhani.pelli@gmail.com> (https://github.com/unkhz/)",
+  "version": "0.3.6",
+  "dependencies": {},
   "devDependencies": {
+    "almost-static-site": "^0.1.2",
     "grunt": "latest",
     "grunt-contrib-clean": "latest",
     "grunt-contrib-uglify": "latest",
-    "grunt-contrib-watch": "latest"
+    "grunt-contrib-watch": "latest",
+    "grunt-jsdoc-to-markdown": "^0.4.2",
+    "highlight.js": "^8.3.0",
+    "lodash": "^2.4.1"
   },
   "scripts": {
+    "build": "grunt release"
+  },
+  "main": "dist/transr.min.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unkhz/transr.js"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/unkhz/transr.js/issues"
   }
 }

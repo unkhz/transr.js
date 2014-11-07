@@ -217,7 +217,7 @@
             transitionProperty = getStyleProperty("transitionProperty"),
             transitionDuration = getStyleProperty("transitionDuration"),
             transitionTimingFunction = getStyleProperty("transitionTimingFunction"),
-            transitionDelay = getStyleProperty("transitionDelay"),
+            //transitionDelay = getStyleProperty("transitionDelay"),
             vendorSpecificProperty = getStyleProperty(options.property),
             enabled = transitionProperty && transitionDuration && transitionTimingFunction && vendorSpecificProperty ? true : false,
             endTimeoutId;
@@ -232,7 +232,6 @@
             if (options.complete) { options.complete(options.el, options.property); }
         } else {
             var el = options.el,
-                vendor = transitionProperty.replace(/Transition.*$/, ''),
                 vendorCSSProperty = getStyleCssProperty(options.property),
                 transitionValue = vendorCSSProperty + " " + options.duration + " " + options.timingFunction + " " + options.delay,
                 durationInMS = asMS(options.duration) + asMS(options.delay),
@@ -410,7 +409,7 @@
         } else {
             if ( transitionProperty && el.style[transitionProperty] ) {
                 // force no transition
-                var oldVal = el.style[transitionProperty];
+                //var oldVal = el.style[transitionProperty];
                 el.style[transitionProperty] = "";
                 el.style[vendorSpecificProperty] = value;
                 //el.style[transitionProperty] = oldVal;

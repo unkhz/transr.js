@@ -115,9 +115,9 @@ to "deg", dimensions default to "px"
 - immediate `Boolean` - If true, transition is skipped entirely. Useful for situations where immediateness is not decided by the caller.  
 - resetTransitionAfterTransitionEnd `Boolean` - If true, transition and value are reset after transitionend event is triggered. Useful for situations where transition should not be reset automatically. E.g. acting on touch movement.  
 - transitionId `String` - If set, the transition will be handled as a singleton. I.e. if a transition with the same ID already exist for the same DOM element, it will be cleared and/or replaced.  
-- x <code>[CSSValue](#Transr.CSSValue)</code>  
-- y <code>[CSSValue](#Transr.CSSValue)</code>  
-- z <code>[CSSValue](#Transr.CSSValue)</code>  
+- x <code>[CSSValue](#Transr.CSSValue)</code> - Value for a CSS property defined by the function call. E.g. Transr.translate({x:10}) will modify the X translation position.  
+- y <code>[CSSValue](#Transr.CSSValue)</code> - Value for a CSS property defined by the function call. E.g. Transr.translate({y:10}) will modify the Y translation position.  
+- z <code>[CSSValue](#Transr.CSSValue)</code> - Value for a CSS property defined by the function call. E.g. Transr.translate({z:10}) will modify the Z translation position.  
 - translateX <code>[CSSValue](#Transr.CSSValue)</code>  
 - translateY <code>[CSSValue](#Transr.CSSValue)</code>  
 - translateZ <code>[CSSValue](#Transr.CSSValue)</code>  

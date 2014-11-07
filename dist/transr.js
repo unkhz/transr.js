@@ -26,6 +26,14 @@
 })(this, function(root) {
     var // minification optimization
     arraySlice = Array.prototype.slice, /**
+         * Transr CSS value can be defined as a valid string E.g. "10px" or a numeric value
+         * in which case the unit is analyzed based on the property. E.g. rotation defaults
+         * to "deg", dimensions default to "px"
+         *
+         * @typedef CSSValue
+         * @memberOf Transr
+         */
+    /**
          * @typedef TransrOptions
          * @property {Element} el The DOM element to be modified
          * @property {String} [duration="0.5s"] CSS rule; defines how long the transition will last
@@ -38,21 +46,21 @@
          * @property {Boolean} [immediate=true] If true, transition is skipped entirely. Useful for situations where immediateness is not decided by the caller.
          * @property {Boolean} [resetTransitionAfterTransitionEnd=true] If true, transition and value are reset after transitionend event is triggered. Useful for situations where transition should not be reset automatically. E.g. acting on touch movement.
          * @property {String} [transitionId] If set, the transition will be handled as a singleton. I.e. if a transition with the same ID already exist for the same DOM element, it will be cleared and/or replaced.
-         * @property {String|Number} x Target value for a CSS transform function. that is defined in the function call. If spefified as a number, Transr will attempt to use the correct unit
-         * @property {String|Number} y Target value for a CSS transform function. that is defined in the function call. If spefified as a number, Transr will attempt to use the correct unit
-         * @property {String|Number} z Target value for a CSS transform function. that is defined in the function call. If spefified as a number, Transr will attempt to use the correct unit
-         * @property {String|Number} translateX Target value for a CSS transform function. that is defined in the function call. If spefified as a number, Transr will attempt to use the correct unit
-         * @property {String|Number} translateY Target value for a CSS transform function. that is defined in the function call. If spefified as a number, Transr will attempt to use the correct unit
-         * @property {String|Number} translateZ Target value for a CSS transform function. that is defined in the function call. If spefified as a number, Transr will attempt to use the correct unit
-         * @property {String|Number} rotateX Target value for a CSS transform function. that is defined in the function call. If spefified as a number, Transr will attempt to use the correct unit
-         * @property {String|Number} rotateY Target value for a CSS transform function. that is defined in the function call. If spefified as a number, Transr will attempt to use the correct unit
-         * @property {String|Number} rotateZ Target value for a CSS transform function. that is defined in the function call. If spefified as a number, Transr will attempt to use the correct unit
-         * @property {String|Number} scaleX Target value for a CSS transform function. that is defined in the function call. If spefified as a number, Transr will attempt to use the correct unit
-         * @property {String|Number} scaleY Target value for a CSS transform function. that is defined in the function call. If spefified as a number, Transr will attempt to use the correct unit
-         * @property {String|Number} scaleZ Target value for a CSS transform function. that is defined in the function call. If spefified as a number, Transr will attempt to use the correct unit
-         * @property {String|Number} skewX Target value for a CSS transform function. that is defined in the function call. If spefified as a number, Transr will attempt to use the correct unit
-         * @property {String|Number} skewY Target value for a CSS transform function. that is defined in the function call. If spefified as a number, Transr will attempt to use the correct unit
-         * @property {String|Number} skewZ Target value for a CSS transform function. that is defined in the function call. If spefified as a number, Transr will attempt to use the correct unit
+         * @property {Transr.CSSValue} x Value for a CSS property defined by the function call. E.g. Transr.translate({x:10}) will modify the X translation position.
+         * @property {Transr.CSSValue} y Value for a CSS property defined by the function call. E.g. Transr.translate({y:10}) will modify the Y translation position.
+         * @property {Transr.CSSValue} z Value for a CSS property defined by the function call. E.g. Transr.translate({z:10}) will modify the Z translation position.
+         * @property {Transr.CSSValue} translateX
+         * @property {Transr.CSSValue} translateY
+         * @property {Transr.CSSValue} translateZ
+         * @property {Transr.CSSValue} rotateX
+         * @property {Transr.CSSValue} rotateY
+         * @property {Transr.CSSValue} rotateZ
+         * @property {Transr.CSSValue} scaleX
+         * @property {Transr.CSSValue} scaleY
+         * @property {Transr.CSSValue} scaleZ
+         * @property {Transr.CSSValue} skewX
+         * @property {Transr.CSSValue} skewY
+         * @property {Transr.CSSValue} skewZ
          * @memberOf Transr
          */
     globalDefaults = {
@@ -186,7 +194,8 @@
     }
     // set any style property value with transition and fallback
     function transition(options) {
-        var transitionShorthandProperty = getStyleProperty("transition"), transitionProperty = getStyleProperty("transitionProperty"), transitionDuration = getStyleProperty("transitionDuration"), transitionTimingFunction = getStyleProperty("transitionTimingFunction"), transitionDelay = getStyleProperty("transitionDelay"), vendorSpecificProperty = getStyleProperty(options.property), enabled = transitionProperty && transitionDuration && transitionTimingFunction && vendorSpecificProperty ? true : false, endTimeoutId;
+        var transitionShorthandProperty = getStyleProperty("transition"), transitionProperty = getStyleProperty("transitionProperty"), transitionDuration = getStyleProperty("transitionDuration"), transitionTimingFunction = getStyleProperty("transitionTimingFunction"), //transitionDelay = getStyleProperty("transitionDelay"),
+        vendorSpecificProperty = getStyleProperty(options.property), enabled = transitionProperty && transitionDuration && transitionTimingFunction && vendorSpecificProperty ? true : false, endTimeoutId;
         if (!enabled || options.fail) {
             // fallback
             if (options.fallback) {
@@ -198,7 +207,7 @@
                 options.complete(options.el, options.property);
             }
         } else {
-            var el = options.el, vendor = transitionProperty.replace(/Transition.*$/, ""), vendorCSSProperty = getStyleCssProperty(options.property), transitionValue = vendorCSSProperty + " " + options.duration + " " + options.timingFunction + " " + options.delay, durationInMS = asMS(options.duration) + asMS(options.delay), fallbackDurationInMS = durationInMS + 1500, transitionEnded = false;
+            var el = options.el, vendorCSSProperty = getStyleCssProperty(options.property), transitionValue = vendorCSSProperty + " " + options.duration + " " + options.timingFunction + " " + options.delay, durationInMS = asMS(options.duration) + asMS(options.delay), fallbackDurationInMS = durationInMS + 1500, transitionEnded = false;
             options.onTransitionEnd = function(e) {
                 //console.log("Transr onTransitionEnd", e ? e.target : 'no event', transitionShorthandProperty, vendorSpecificProperty, transitionValue, el.id, fallbackDurationInMS);
                 // check that we react on the correct element and property
@@ -329,9 +338,9 @@
      *
      * @param {Element} el DOM element to be modified
      * @param {String} property The property name to be modified in camelCase E.g. transformOrigin
-     * @param {String|Number} value The value to be set. Can be a valid string E.g. "10px" or a numeric value in which case the unit is analyzed based on the property.
+     * @param {Transr.CSSValue} value The value to be set
      * @param {String} fallBackProperty The fallback property name to be modified in camelCase E.g. transformOrigin. Modification happens only if the actual property cannot be modified.
-     * @param {String|Number} value The fallbackvalue to be set. Can be a valid string E.g. "10px" or a numeric value in which case the unit is analyzed based on the property.
+     * @param {Transr.CSSValue} value The fallbackvalue to be set
      * @memberOf Transr
      */
     function set(el, property, value, fallbackProperty, fallbackValue) {
@@ -344,7 +353,7 @@
         } else {
             if (transitionProperty && el.style[transitionProperty]) {
                 // force no transition
-                var oldVal = el.style[transitionProperty];
+                //var oldVal = el.style[transitionProperty];
                 el.style[transitionProperty] = "";
                 el.style[vendorSpecificProperty] = value;
             } else {

@@ -4,6 +4,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-jsdoc-to-markdown');
 
   // Configure
   var
@@ -44,6 +45,15 @@ module.exports = function(grunt) {
           }
         }
       },
+      jsdoc2md: {
+        oneOutputFile: {
+          options: {
+            index: true
+          },
+          src: "transr.js",
+          dest: "dist/docs.md"
+        }
+      },
       clean: {
         all: [dir.dist]
       },
@@ -59,6 +69,6 @@ module.exports = function(grunt) {
   grunt.initConfig(config);
 
   // Export tasks
-  grunt.registerTask('release', ['clean', 'uglify']);
+  grunt.registerTask('release', ['clean', 'uglify', 'jsdoc2md']);
   grunt.registerTask('default', ['release']);
 };
