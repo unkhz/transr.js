@@ -21,7 +21,7 @@ module.exports = function(grunt) {
       uglify : {
         unminified : {
           options: {
-            banner:grunt.file.read('DISCLAIMER'),
+            banner:grunt.file.read('DISCLAIMER').replace('* Transr.js', '* Transr.js v' + pkg.version),
             preserveComments:true,
             mangle:false,
             compress:false,
@@ -33,7 +33,7 @@ module.exports = function(grunt) {
         },
         minified : {
           options: {
-            banner:grunt.file.read('DISCLAIMER'),
+            banner:grunt.file.read('DISCLAIMER').replace('* Transr.js', '* Transr.js v' + pkg.version),
             report:'gzip',
             preserveComments:false,
             mangle:true,
