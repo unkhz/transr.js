@@ -156,7 +156,8 @@ Changelog
 
  Version  | Date         | Changes
 --------- | ------------ | ----------------------------
-    0.3.6 | Nov 7, 2014  | Add API documentation, dist files in repo and Grunt build
+    0.3.9 | Nov 19, 2016 | Fix property name checking on browsers that accept prefixed prop, but fire non-prefixed
+    0.3.7 | Nov 7, 2014  | Add API documentation, dist files in repo and Grunt build
     0.3.4 | Jan 29, 2014 | Also reset immediate transitions when transitionId is used
     0.3.3 | Jan 28, 2014 | Added possibility to reset old event listeners by using transitionId parameter
     0.3.2 | Dec 22, 2013 | Added option for enabling or disabling reset of transition after transitionend
@@ -171,7 +172,7 @@ License
 
 MIT License
 
-Copyright (C) 2012-2014 Juhani Pelli
+Copyright (C) 2012-2016 Juhani Pelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
