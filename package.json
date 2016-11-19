@@ -17,17 +17,17 @@
   "author": "Juhani Pelli <juhani.pelli@gmail.com> (https://github.com/unkhz/)",
   "dependencies": {},
   "devDependencies": {
-    "almost-static-site": "^0.1.2",
+    "almost-static-site": "0.1.8",
     "grunt": "latest",
     "grunt-contrib-clean": "latest",
     "grunt-contrib-uglify": "latest",
     "grunt-contrib-watch": "latest",
-    "grunt-jsdoc-to-markdown": "^0.4.2",
+    "grunt-jsdoc-to-markdown": "latest",
     "highlight.js": "^8.3.0",
     "lodash": "^2.4.1"
   },
   "scripts": {
-    "build": "grunt release && gulp build --gulpfile node_modules/almost-static-site/Gulpfile.js --site ../../docs/config-production"
+    "build": "grunt release && gulp dist --gulpfile node_modules/almost-static-site/Gulpfile.js --site $(pwd)/docs/config-production.js"
   },
   "main": "dist/transr.min.js",
   "repository": {
