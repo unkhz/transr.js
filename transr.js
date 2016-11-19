@@ -241,8 +241,11 @@
             options.onTransitionEnd = function(e){
                 //console.log("Transr onTransitionEnd", e ? e.target : 'no event', transitionShorthandProperty, vendorSpecificProperty, transitionValue, el.id, fallbackDurationInMS);
 
-                // check that we react on the correct element and property
-                if ( e.target !== el || e.propertyName !==  vendorCSSProperty ) { return; }
+                // Skip if event was triggered on some other element / property
+                var isExpectedProperty = [vendorCSSProperty, options.property].indexOf(e.propertyName) >= 0;
+                if ( e.target !== el || !isExpectedProperty ) {
+                    return;
+                }
 
                 if ( transitionEnded ) { return; }
                 transitionEnded = true;

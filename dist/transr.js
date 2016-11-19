@@ -1,11 +1,11 @@
 /**
- * Transr.js
+ * Transr.js v0.3.8
  * Minimalistic CSS3 Transitions and translations helper with feature detection and fallback
  *
  * Juhani Pelli <juhani.pelli@gmail.com>
  * https://github.com/unkhz/transr.js/
  *
- * MIT License Copyright 2012-2014 Juhani Pelli
+ * MIT License Copyright 2012-2016 Juhani Pelli
  */
 /*global define*/
 /**
@@ -210,8 +210,9 @@
             var el = options.el, vendorCSSProperty = getStyleCssProperty(options.property), transitionValue = vendorCSSProperty + " " + options.duration + " " + options.timingFunction + " " + options.delay, durationInMS = asMS(options.duration) + asMS(options.delay), fallbackDurationInMS = durationInMS + 1500, transitionEnded = false;
             options.onTransitionEnd = function(e) {
                 //console.log("Transr onTransitionEnd", e ? e.target : 'no event', transitionShorthandProperty, vendorSpecificProperty, transitionValue, el.id, fallbackDurationInMS);
-                // check that we react on the correct element and property
-                if (e.target !== el || e.propertyName !== vendorCSSProperty) {
+                // Skip if event was triggered on some other element / property
+                var isExpectedProperty = [ vendorCSSProperty, options.property ].indexOf(e.propertyName) >= 0;
+                if (e.target !== el || !isExpectedProperty) {
                     return;
                 }
                 if (transitionEnded) {

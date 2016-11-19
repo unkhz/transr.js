@@ -2,7 +2,7 @@
 id: footer
 isNotDisplayedInMenu: true
 ---
-<small class="dj-copy">....<span class="show-for-medium-up">....::</span>::|| <span class="show-for-small-only">&copy;</span><span class="show-for-medium-up">Copyright</span> 2012-2014 [Juhani Pelli](http://juhani.pelli.fi/) ||::<span class="show-for-medium-up">::....</span>....</small>
+<small class="dj-copy">....<span class="show-for-medium-up">....::</span>::|| <span class="show-for-small-only">&copy;</span><span class="show-for-medium-up">Copyright</span> 2012-2016 [Juhani Pelli](http://juhani.pelli.fi/) ||::<span class="show-for-medium-up">::....</span>....</small>
 
 <i class="fa fa-recycle"><i>
 
