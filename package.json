@@ -1,6 +1,6 @@
 {
   "name": "transr",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "description": "Minimalistic CSS3 transitions and transforms helper with feature detection and fallback",
   "keywords": [
     "javascript",

@@ -1,5 +1,5 @@
 /**
- * Transr.js v0.3.8
+ * Transr.js v0.3.10
  * Minimalistic CSS3 Transitions and translations helper with feature detection and fallback
  *
  * Juhani Pelli <juhani.pelli@gmail.com>
